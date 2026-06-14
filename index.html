@@ -26,11 +26,13 @@
   <style>body { box-sizing: border-box; }</style>
  </head>
  <body class="h-full">
-  <div id="app" class="h-full w-full overflow-auto bg-slate-50"><!-- PAGE 1: Landing -->
-   <div id="page-landing" class="min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
-    <div class="w-full max-w-md text-center fade-in"><!-- Logo/Icon -->
-     <div class="mb-6 flex justify-center">
-      <img id="logo-img" src="https://cdn-sdotid.adg.id/images/c5c86b0b-3b3f-4177-84c6-b2ada8d3e1e2_716x716.webp.jpeg" alt="Logo Sekolah" class="w-20 h-20 rounded-2xl shadow-lg object-cover" loading="lazy" onerror="this.style.background='#2563eb';">
+  <div id="app" class="h-full w-full overflow-auto bg-slate-50">
+   <!-- PAGE 1: Landing -->
+   <div id="page-landing" class="min-h-full flex flex-col items-center justify-center px-4 py-8 relative">
+    <!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+    <div class="w-full max-w-md text-center fade-in">
+     <!-- Logo/Icon -->
+     <div class="mb-6 flex justify-center"><img id="logo-img" src="https://cdn-sdotid.adg.id/images/c5c86b0b-3b3f-4177-84c6-b2ada8d3e1e2_716x716.webp.jpeg" alt="Logo Sekolah" class="w-20 h-20 rounded-2xl shadow-lg object-cover" loading="lazy" onerror="this.style.background='#2563eb';">
      </div><!-- Title -->
      <h1 id="title-text" class="text-2xl font-800 text-slate-800 mb-1">Sistem Antrian SPMB</h1>
      <p id="school-text" class="text-lg font-600 text-blue-600 mb-2">SMP Negeri 3 Pemalang</p>
@@ -46,43 +48,55 @@
        <p id="queue-remaining" class="text-3xl font-800 text-blue-600 mt-1">300</p>
       </div>
      </div>
-     <div id="queue-full-msg" class="hidden mt-4 bg-red-50 border border-red-200 rounded-xl p-3 text-red-600 text-sm font-500"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Maaf, antrian hari ini sudah penuh. Silakan coba lagi besok pukul 19.00.
+     <div id="queue-full-msg" class="hidden mt-4 bg-red-50 border border-red-200 rounded-xl p-3 text-red-600 text-sm font-500">
+      <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Maaf, antrian hari ini sudah penuh. Silakan coba lagi besok pukul 19.00.
      </div>
-     <div id="queue-closed-msg" class="hidden mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-yellow-700 text-sm font-500"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Antrian dibuka setiap hari pukul 19.00. Silakan datang kembali pada jam tersebut.
+     <div id="queue-closed-msg" class="hidden mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-yellow-700 text-sm font-500">
+      <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Antrian dibuka setiap hari pukul 19.00. Silakan datang kembali pada jam tersebut.
      </div>
     </div>
    </div><!-- PAGE 2: Form -->
-   <div id="page-form" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-form"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+   <div id="page-form" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative">
+    <!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-form"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
     <div class="w-full max-w-md slide-up">
-     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6"><!-- Queue Number Display -->
+     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
+      <!-- Queue Number Display -->
       <div class="text-center mb-6">
        <p id="display-queue-number" class="text-6xl font-800 text-blue-600">001</p>
       </div>
       <div class="h-px bg-slate-100 mb-6"></div>
       <h2 class="text-lg font-700 text-slate-800 mb-4">Lengkapi Data Pendaftaran</h2>
       <form id="form-data" onsubmit="handleSubmitForm(event)" class="space-y-4">
-       <div><label for="waktu_daftar" class="block text-sm font-600 text-slate-600 mb-1">Waktu Daftar</label> <input type="text" id="waktu_daftar" readonly class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm">
+       <div>
+        <label for="waktu_daftar" class="block text-sm font-600 text-slate-600 mb-1">Waktu Daftar</label> <input type="text" id="waktu_daftar" readonly class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm">
        </div>
-       <div><label for="nama_siswa" class="block text-sm font-600 text-slate-600 mb-1">Nama Lengkap Siswa</label> <input type="text" id="nama_siswa" required placeholder="Masukkan nama lengkap" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+       <div>
+        <label for="nama_siswa" class="block text-sm font-600 text-slate-600 mb-1">Nama Lengkap Siswa</label> <input type="text" id="nama_siswa" required placeholder="Masukkan nama lengkap" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
        </div>
-       <div><label for="asal_sekolah" class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label> <input type="text" id="asal_sekolah" required placeholder="Nama sekolah asal" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+       <div>
+        <label for="asal_sekolah" class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label> <input type="text" id="asal_sekolah" required placeholder="Nama sekolah asal" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
        </div>
-       <div><label for="nama_ortu" class="block text-sm font-600 text-slate-600 mb-1">Nama Orang Tua/Wali</label> <input type="text" id="nama_ortu" required placeholder="Nama orang tua/wali" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+       <div>
+        <label for="nama_ortu" class="block text-sm font-600 text-slate-600 mb-1">Nama Orang Tua/Wali</label> <input type="text" id="nama_ortu" required placeholder="Nama orang tua/wali" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
        </div>
-       <div><label for="no_wa" class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label> <input type="tel" id="no_wa" required placeholder="08xxxxxxxxxx" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+       <div>
+        <label for="no_wa" class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label> <input type="tel" id="no_wa" required placeholder="08xxxxxxxxxx" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
        </div><button type="submit" id="btn-submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"> <i data-lucide="send" class="w-4 h-4"></i> <span id="btn-submit-text">Konfirmasi &amp; Kirim</span> </button>
       </form>
      </div>
     </div>
    </div><!-- PAGE 3: Success -->
-   <div id="page-success" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-success"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+   <div id="page-success" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative">
+    <!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-success"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
     <div class="w-full max-w-md text-center slide-up">
      <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
-      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="check-circle" class="w-8 h-8 text-emerald-600"></i>
+      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+       <i data-lucide="check-circle" class="w-8 h-8 text-emerald-600"></i>
       </div>
       <h2 class="text-xl font-700 text-slate-800 mb-2">Pendaftaran Berhasil!</h2>
       <p class="text-slate-500 text-sm mb-4">Data Anda telah tersimpan</p>
-      <div class="bg-gradient-to-b from-emerald-50 to-blue-50 rounded-2xl p-8 mb-6 flex flex-col items-center"><i data-lucide="check-circle" class="w-24 h-24 text-emerald-500 mb-4"></i>
+      <div class="bg-gradient-to-b from-emerald-50 to-blue-50 rounded-2xl p-8 mb-6 flex flex-col items-center">
+       <i data-lucide="check-circle" class="w-24 h-24 text-emerald-500 mb-4"></i>
        <p id="success-queue-number-large" class="text-6xl font-800 text-blue-600">001</p>
        <p class="text-slate-600 font-600 mt-2">Nomor Antrian Anda</p>
       </div>
@@ -373,6 +387,11 @@
     }
 
     try {
+      // Cek apakah Data SDK sudah siap
+      if (!window.dataSdk) {
+        throw new Error('Data SDK tidak siap');
+      }
+
       // Save to Data SDK
       const result = await window.dataSdk.create({
         queue_number: currentQueueNumber,
@@ -385,31 +404,12 @@
       });
 
       if (!result.isOk) {
+        console.error('Create error:', result.error);
         btn.disabled = false;
         btnText.textContent = 'Konfirmasi & Kirim';
-        showInlineError('Gagal menyimpan data. Silakan coba lagi.');
+        showInlineError('Gagal menyimpan data: ' + (result.error?.message || 'Unknown error'));
         return;
       }
-
-      // Kirim ke webhook Google Sheets (async, tidak perlu menunggu)
-      const payload = {
-        queue_number: formattedNum,
-        nama_siswa: nama,
-        asal_sekolah: asal,
-        nama_ortu: ortu,
-        no_wa: wa,
-        waktu_daftar: waktu,
-        tanggal: targetDay
-      };
-      
-      // Non-blocking webhook call
-      setTimeout(() => {
-        fetch(WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }).catch(err => console.error('Webhook send error:', err));
-      }, 100);
 
       // Update success page elements immediately
       document.getElementById('success-queue-number-large').textContent = formattedNum;
@@ -433,14 +433,31 @@
       btn.disabled = false;
       btnText.textContent = 'Konfirmasi & Kirim';
 
+      // Kirim ke webhook Google Sheets (async, background)
+      const payload = {
+        queue_number: formattedNum,
+        nama_siswa: nama,
+        asal_sekolah: asal,
+        nama_ortu: ortu,
+        no_wa: wa,
+        waktu_daftar: waktu,
+        tanggal: targetDay
+      };
+      
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.log('Webhook sent (background):', err));
+
       // Show success page
       showPage('page-success');
 
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Submit error:', error);
       btn.disabled = false;
       btnText.textContent = 'Konfirmasi & Kirim';
-      showInlineError('Terjadi kesalahan: ' + (error.message || 'Unknown error'));
+      showInlineError('Error: ' + (error.message || 'Terjadi kesalahan yang tidak diketahui'));
     }
   }
 
@@ -488,16 +505,26 @@
   }
 
   function toggleTheme() {
-    const currentTheme = window.elementSdk?.config?.theme_mode || defaultConfig.theme_mode;
+    if (!window.elementSdk || !window.elementSdk.config) {
+      console.error('SDK not ready');
+      return;
+    }
+    
+    const currentTheme = window.elementSdk.config.theme_mode || defaultConfig.theme_mode;
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    window.elementSdk?.setConfig({ theme_mode: newTheme });
-    updateThemeIcon(newTheme);
+    
+    // Update config
+    window.elementSdk.setConfig({ theme_mode: newTheme }).then(() => {
+      updateThemeIcon(newTheme);
+    }).catch(err => console.error('Theme update error:', err));
   }
 
   function updateThemeIcon(themeMode) {
-    const icons = document.querySelectorAll('[data-lucide="sun"], [data-lucide="moon"]');
-    icons.forEach(icon => {
-      if (icon.parentElement && icon.parentElement.id?.includes('theme-toggle')) {
+    // Update all theme toggle buttons
+    const toggleButtons = document.querySelectorAll('#theme-toggle, #theme-toggle-form, #theme-toggle-success');
+    toggleButtons.forEach(btn => {
+      const icon = btn.querySelector('[data-lucide]');
+      if (icon) {
         const newIcon = themeMode === 'dark' ? 'moon' : 'sun';
         const newColor = themeMode === 'dark' ? '#60a5fa' : '#f59e0b';
         icon.setAttribute('data-lucide', newIcon);
@@ -509,5 +536,5 @@
 
   lucide.createIcons();
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0ba9b12938afd06',t:'MTc4MTQ1MzQzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0baa1437037fd06',t:'MTc4MTQ1MzY4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
