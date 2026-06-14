@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head><script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antrian SPMB - SMP Negeri 3 Pemalang</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .pulse-btn { animation: pulse-ring 2s infinite; }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+      70% { box-shadow: 0 0 0 20px rgba(37, 99, 235, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+    }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .slide-up { animation: slideUp 0.5s ease-out; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto bg-slate-50"><!-- PAGE 1: Landing -->
+   <div id="page-landing" class="min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+    <div class="w-full max-w-md text-center fade-in"><!-- Logo/Icon -->
+     <div class="mb-6 flex justify-center">
+      <img src="https://cdn-sdotid.adg.id/images/c5c86b0b-3b3f-4177-84c6-b2ada8d3e1e2_716x716.webp.jpeg" alt="Logo Sekolah" class="w-20 h-20 rounded-2xl shadow-lg object-cover" loading="lazy" onerror="console.error('Logo failed to load:', this.src); this.style.background='#2563eb'; this.style.display='flex'; this.style.alignItems='center'; this.style.justifyContent='center';">
+     </div><!-- Title -->
+     <h1 id="title-text" class="text-2xl font-800 text-slate-800 mb-1">Sistem Antrian SPMB</h1>
+     <p id="school-text" class="text-lg font-600 text-blue-600 mb-2">SMP Negeri 3 Pemalang</p>
+     <p class="text-slate-500 text-sm mb-8">Tahun Pelajaran 2026/2027</p>
+     <p id="queue-day-info" class="text-sm font-600 text-blue-600 mb-6">Untuk Hari: <span id="next-day-name">-</span></p><!-- Queue Button --> <button id="btn-ambil" onclick="handleAmbilAntrian()" class="pulse-btn w-48 h-48 mx-auto rounded-full bg-blue-600 hover:bg-blue-700 transition-all duration-300 flex flex-col items-center justify-center text-white shadow-xl cursor-pointer active:scale-95"> <i data-lucide="ticket" class="w-12 h-12 mb-2"></i> <span class="text-lg font-700">Ambil Antrian</span> </button> <!-- Queue Info -->
+     <div class="mt-8 grid grid-cols-2 gap-4">
+      <div class="bg-red-50 rounded-xl p-4 shadow-sm border border-red-200">
+       <p class="text-xs text-red-600 uppercase tracking-wide font-600">Terpakai</p>
+       <p id="queue-used" class="text-3xl font-800 text-red-500 mt-1">0</p>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-4 shadow-sm border border-blue-200">
+       <p class="text-xs text-blue-600 uppercase tracking-wide font-600">Sisa</p>
+       <p id="queue-remaining" class="text-3xl font-800 text-blue-600 mt-1">300</p>
+      </div>
+     </div>
+     <div id="queue-full-msg" class="hidden mt-4 bg-red-50 border border-red-200 rounded-xl p-3 text-red-600 text-sm font-500"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Maaf, antrian hari ini sudah penuh. Silakan coba lagi besok pukul 19.00.
+     </div>
+     <div id="queue-closed-msg" class="hidden mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-yellow-700 text-sm font-500"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Antrian dibuka setiap hari pukul 19.00. Silakan datang kembali pada jam tersebut.
+     </div>
+    </div>
+   </div><!-- PAGE 2: Form -->
+   <div id="page-form" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-form"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+    <div class="w-full max-w-md slide-up">
+     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6"><!-- Queue Number Display -->
+      <div class="text-center mb-6">
+       <p id="display-queue-number" class="text-6xl font-800 text-blue-600">001</p>
+      </div>
+      <div class="h-px bg-slate-100 mb-6"></div>
+      <h2 class="text-lg font-700 text-slate-800 mb-4">Lengkapi Data Pendaftaran</h2>
+      <form id="form-data" onsubmit="handleSubmitForm(event)" class="space-y-4">
+       <div><label for="waktu_daftar" class="block text-sm font-600 text-slate-600 mb-1">Waktu Daftar</label> <input type="text" id="waktu_daftar" readonly class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm">
+       </div>
+       <div><label for="nama_siswa" class="block text-sm font-600 text-slate-600 mb-1">Nama Lengkap Siswa</label> <input type="text" id="nama_siswa" required placeholder="Masukkan nama lengkap" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+       </div>
+       <div><label for="asal_sekolah" class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label> <input type="text" id="asal_sekolah" required placeholder="Nama sekolah asal" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+       </div>
+       <div><label for="nama_ortu" class="block text-sm font-600 text-slate-600 mb-1">Nama Orang Tua/Wali</label> <input type="text" id="nama_ortu" required placeholder="Nama orang tua/wali" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+       </div>
+       <div><label for="no_wa" class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label> <input type="tel" id="no_wa" required placeholder="08xxxxxxxxxx" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+       </div><button type="submit" id="btn-submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"> <i data-lucide="send" class="w-4 h-4"></i> <span id="btn-submit-text">Konfirmasi &amp; Kirim</span> </button>
+      </form>
+     </div>
+    </div>
+   </div><!-- PAGE 3: Success -->
+   <div id="page-success" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-success"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+    <div class="w-full max-w-md text-center slide-up">
+     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
+      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="check-circle" class="w-8 h-8 text-emerald-600"></i>
+      </div>
+      <h2 class="text-xl font-700 text-slate-800 mb-2">Pendaftaran Berhasil!</h2>
+      <p class="text-slate-500 text-sm mb-4">Data Anda telah tersimpan</p>
+      <div class="bg-gradient-to-b from-emerald-50 to-blue-50 rounded-2xl p-8 mb-6 flex flex-col items-center"><i data-lucide="check-circle" class="w-24 h-24 text-emerald-500 mb-4"></i>
+       <p id="success-queue-number-large" class="text-6xl font-800 text-blue-600">001</p>
+       <p class="text-slate-600 font-600 mt-2">Nomor Antrian Anda</p>
+      </div>
+      <div id="success-details" class="text-left bg-slate-50 rounded-xl p-4 mb-6 text-sm space-y-1">
+      </div>
+      <p id="success-day-info" class="text-sm font-600 text-blue-600 mb-4">Antrian Untuk Hari: <span id="success-day-name">-</span></p>
+      <div class="bg-blue-50 border-l-4 border-blue-600 rounded-lg p-4 mb-6">
+       <p class="text-blue-900 font-700 text-sm flex items-start gap-2"><i data-lucide="camera" class="w-5 h-5 flex-shrink-0 mt-0.5"></i> <span>Silakan Screenshot Layar Ini Sebagai Bukti Pendaftaran</span></p>
+      </div><button onclick="resetToLanding()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition text-sm"> Kembali ke Beranda </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+  const DAILY_LIMIT = 300;
+  const QUEUE_OPEN_HOUR = 19; // Jam 19:00 (7 PM)
+  const QUEUE_RESET_HOUR = 18; // Jam 18:00 (6 PM) untuk reset antrian
+  // Webhook URL untuk Google Sheets
+  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyXQlZD9dvLp0Dk2i9nX60H6p8jrYtoC8NgGFQBwHWLJAASbvq3fmGKHR0CnZIrF5nMQA/exec';
+
+  let allRecords = [];
+  let currentQueueNumber = 0;
+  let todayStr = new Date().toISOString().split('T')[0];
+  let nextDayStr = getNextDayStr();
+
+  // Fungsi untuk mendapatkan hari berikutnya
+  function getNextDayStr() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  }
+
+  // Fungsi untuk mendapatkan nama hari dalam bahasa Indonesia
+  function getDayName(dateStr) {
+    const date = new Date(dateStr + 'T00:00:00');
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    const dayName = days[date.getDay()];
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `${dayName}, ${day} ${month} ${year}`;
+  }
+
+  // Fungsi untuk mengecek apakah antrian sedang buka
+  function isQueueOpen() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    return currentHour >= QUEUE_OPEN_HOUR;
+  }
+
+  // Default config
+  const defaultConfig = {
+    main_title: 'Sistem Antrian SPMB',
+    school_name: 'SMP Negeri 3 Pemalang',
+    theme_mode: 'light',
+    background_color: '#f8fafc',
+    primary_color: '#2563eb',
+    text_color: '#1e293b',
+    surface_color: '#ffffff',
+    accent_color: '#059669'
+  };
+
+  // Theme configurations
+  const themes = {
+    light: {
+      background: '#f8fafc',
+      surface: '#ffffff',
+      text: '#1e293b',
+      primary: '#2563eb',
+      accent: '#059669',
+      secondary: '#64748b',
+      border: '#e2e8f0'
+    },
+    dark: {
+      background: '#0f172a',
+      surface: '#1e293b',
+      text: '#f1f5f9',
+      primary: '#3b82f6',
+      accent: '#10b981',
+      secondary: '#cbd5e1',
+      border: '#334155'
+    }
+  };
+
+  // Element SDK
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange: async (config) => {
+      const title = config.main_title || defaultConfig.main_title;
+      const school = config.school_name || defaultConfig.school_name;
+      const themeMode = config.theme_mode || defaultConfig.theme_mode;
+      const theme = themes[themeMode] || themes.light;
+
+      document.getElementById('title-text').textContent = title;
+      document.getElementById('school-text').textContent = school;
+      document.getElementById('app').style.backgroundColor = theme.background;
+      document.getElementById('app').style.color = theme.text;
+
+      // Update all elements with theme colors
+      document.getElementById('btn-ambil').style.backgroundColor = theme.primary;
+      document.getElementById('btn-ambil').style.color = '#ffffff';
+      document.getElementById('title-text').style.color = theme.text;
+      document.getElementById('school-text').style.color = theme.primary;
+      document.getElementById('queue-remaining').style.color = theme.accent;
+
+      // Update form backgrounds
+      document.querySelectorAll('input[type="text"], input[type="tel"]').forEach(el => {
+        el.style.backgroundColor = theme.surface;
+        el.style.color = theme.text;
+        el.style.borderColor = theme.border;
+      });
+
+      // Update form labels
+      document.querySelectorAll('label').forEach(el => {
+        el.style.color = theme.text;
+      });
+
+      // Update cards
+      document.querySelectorAll('.bg-white').forEach(el => {
+        el.style.backgroundColor = theme.surface;
+        el.style.color = theme.text;
+        el.style.borderColor = theme.border;
+      });
+
+      // Update success detail section specifically
+      const successDetails = document.getElementById('success-details');
+      if (successDetails) {
+        successDetails.style.backgroundColor = theme.surface;
+        successDetails.style.color = theme.text;
+        successDetails.style.borderColor = theme.border;
+      }
+
+      // Update all text elements to theme text color
+      document.querySelectorAll('.text-slate-800, .text-slate-500, .text-slate-600, .text-slate-700').forEach(el => {
+        if (el.classList.contains('text-slate-800') || el.classList.contains('text-slate-700')) {
+          el.style.color = theme.text;
+        } else {
+          el.style.color = theme.secondary;
+        }
+      });
+
+      // Update queue number display colors
+      document.getElementById('display-queue-number').style.color = theme.primary;
+      document.getElementById('success-queue-number-large').style.color = theme.primary;
+
+      // Update kotak terpakai dan sisa
+      const usedBox = document.querySelector('[id="queue-used"]')?.parentElement?.parentElement;
+      const remainingBox = document.querySelector('[id="queue-remaining"]')?.parentElement?.parentElement;
+      
+      if (usedBox) {
+        usedBox.style.backgroundColor = themeMode === 'dark' ? '#7f1d1d' : '#fef2f2';
+        usedBox.style.borderColor = themeMode === 'dark' ? '#991b1b' : '#fecaca';
+      }
+      
+      if (remainingBox) {
+        remainingBox.style.backgroundColor = themeMode === 'dark' ? '#0c2340' : '#eff6ff';
+        remainingBox.style.borderColor = themeMode === 'dark' ? '#1e3a8a' : '#bfdbfe';
+      }
+
+      // Update tombol kembali
+      const backBtn = document.querySelector('button[onclick="resetToLanding()"]');
+      if (backBtn) {
+        backBtn.style.backgroundColor = theme.primary;
+        backBtn.style.color = '#ffffff';
+      }
+    },
+    mapToCapabilities: (config) => ({
+      recolorables: [],
+      borderables: [],
+      fontEditable: undefined,
+      fontSizeable: undefined
+    }),
+    mapToEditPanelValues: (config) => new Map([
+      ['main_title', config.main_title || defaultConfig.main_title],
+      ['school_name', config.school_name || defaultConfig.school_name],
+      ['theme_mode', config.theme_mode || defaultConfig.theme_mode]
+    ])
+  });
+
+  // Data SDK
+  const dataHandler = {
+    onDataChanged(data) {
+      allRecords = data;
+      
+      // Ambil data untuk hari berikutnya (ketika antrian buka)
+      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+      const todayRecords = data.filter(r => r.tanggal === targetDay);
+      const used = todayRecords.length;
+      const remaining = Math.max(0, DAILY_LIMIT - used);
+
+      document.getElementById('queue-used').textContent = used;
+      document.getElementById('queue-remaining').textContent = remaining;
+
+      // Update tampilan hari antrian
+      const dayName = getDayName(targetDay);
+      if (document.getElementById('next-day-name')) {
+        document.getElementById('next-day-name').textContent = dayName;
+      }
+
+      if (remaining === 0) {
+        document.getElementById('btn-ambil').disabled = true;
+        document.getElementById('btn-ambil').classList.add('opacity-50');
+        document.getElementById('queue-full-msg').classList.remove('hidden');
+        document.getElementById('queue-closed-msg').classList.add('hidden');
+      } else if (!isQueueOpen()) {
+        document.getElementById('btn-ambil').disabled = true;
+        document.getElementById('btn-ambil').classList.add('opacity-50');
+        document.getElementById('queue-closed-msg').classList.remove('hidden');
+        document.getElementById('queue-full-msg').classList.add('hidden');
+      } else {
+        document.getElementById('btn-ambil').disabled = false;
+        document.getElementById('btn-ambil').classList.remove('opacity-50');
+        document.getElementById('queue-full-msg').classList.add('hidden');
+        document.getElementById('queue-closed-msg').classList.add('hidden');
+      }
+    }
+  };
+
+  (async () => {
+    await window.dataSdk.init(dataHandler);
+  })();
+
+  function getTodayCount() {
+    const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+    return allRecords.filter(r => r.tanggal === targetDay).length;
+  }
+
+  function handleAmbilAntrian() {
+    if (!isQueueOpen()) {
+      showInlineWarning('Antrian dibuka pukul 19.00. Silakan datang kembali pada jam tersebut.');
+      return;
+    }
+
+    const used = getTodayCount();
+    if (used >= DAILY_LIMIT) {
+      showInlineWarning('Maaf, antrian sudah penuh. Silakan coba lagi besok pukul 19.00.');
+      return;
+    }
+
+    currentQueueNumber = used + 1;
+    const formattedNum = String(currentQueueNumber).padStart(3, '0');
+
+    document.getElementById('display-queue-number').textContent = formattedNum;
+
+    const now = new Date();
+    const waktu = now.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+    document.getElementById('waktu_daftar').value = waktu;
+
+    showPage('page-form');
+  }
+
+  async function handleSubmitForm(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('btn-submit');
+    const btnText = document.getElementById('btn-submit-text');
+    btn.disabled = true;
+    btnText.textContent = 'Mengirim...';
+
+    const nama = document.getElementById('nama_siswa').value.trim();
+    const asal = document.getElementById('asal_sekolah').value.trim();
+    const ortu = document.getElementById('nama_ortu').value.trim();
+    const wa = document.getElementById('no_wa').value.trim();
+    const waktu = document.getElementById('waktu_daftar').value;
+    const formattedNum = String(currentQueueNumber).padStart(3, '0');
+    const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+
+    // Validasi input
+    if (!nama || !asal || !ortu || !wa) {
+      btn.disabled = false;
+      btnText.textContent = 'Konfirmasi & Kirim';
+      showInlineError('Mohon isi semua data dengan benar.');
+      return;
+    }
+
+    try {
+      // Save to Data SDK
+      const result = await window.dataSdk.create({
+        queue_number: currentQueueNumber,
+        nama_siswa: nama,
+        asal_sekolah: asal,
+        nama_ortu: ortu,
+        no_wa: wa,
+        waktu_daftar: waktu,
+        tanggal: targetDay
+      });
+
+      if (!result.isOk) {
+        btn.disabled = false;
+        btnText.textContent = 'Konfirmasi & Kirim';
+        showInlineError('Gagal menyimpan data. Silakan coba lagi.');
+        return;
+      }
+
+      // Update success page elements
+      document.getElementById('success-queue-number-large').textContent = formattedNum;
+      
+      // Update detail section
+      document.getElementById('success-details').innerHTML = `
+        <p><span class="font-600">Nama:</span> ${nama}</p>
+        <p><span class="font-600">Asal Sekolah:</span> ${asal}</p>
+        <p><span class="font-600">Orang Tua:</span> ${ortu}</p>
+        <p><span class="font-600">No. WA:</span> ${wa}</p>
+        <p><span class="font-600">Waktu:</span> ${waktu}</p>
+      `;
+
+      // Update hari antrian di halaman sukses
+      const dayName = getDayName(targetDay);
+      document.getElementById('success-day-name').textContent = dayName;
+
+      // Reset form
+      document.getElementById('form-data').reset();
+      btn.disabled = false;
+      btnText.textContent = 'Konfirmasi & Kirim';
+
+      // Show success page
+      showPage('page-success');
+
+      // Send webhook (non-blocking, no await)
+      const payload = {
+        queue_number: formattedNum,
+        nama_siswa: nama,
+        asal_sekolah: asal,
+        nama_ortu: ortu,
+        no_wa: wa,
+        waktu_daftar: waktu,
+        tanggal: targetDay
+      };
+      
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error('Webhook error:', err));
+
+    } catch (error) {
+      console.error('Error:', error);
+      btn.disabled = false;
+      btnText.textContent = 'Konfirmasi & Kirim';
+      showInlineError('Terjadi kesalahan. Silakan coba lagi.');
+    }
+  }
+
+  function showInlineError(msg) {
+    let el = document.getElementById('inline-error');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'inline-error';
+      el.className = 'bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl p-3 mt-3';
+      document.getElementById('form-data').appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 4000);
+  }
+
+  function showInlineWarning(msg) {
+    let el = document.getElementById('inline-warning');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'inline-warning';
+      el.className = 'bg-yellow-50 border border-yellow-200 text-yellow-700 text-sm rounded-xl p-3 mt-4';
+      document.querySelector('.w-full.max-w-md').appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 5000);
+  }
+
+  function showPage(pageId) {
+    ['page-landing', 'page-form', 'page-success'].forEach(id => {
+      document.getElementById(id).classList.add('hidden');
+    });
+    document.getElementById(pageId).classList.remove('hidden');
+  }
+
+  function resetToLanding() {
+    showPage('page-landing');
+  }
+
+  function toggleTheme() {
+    const currentTheme = window.elementSdk.config.theme_mode || defaultConfig.theme_mode;
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    window.elementSdk.setConfig({ theme_mode: newTheme });
+    updateThemeIcon(newTheme);
+  }
+
+  function updateThemeIcon(themeMode) {
+    const btn = document.getElementById('theme-toggle');
+    const btn2 = document.getElementById('theme-toggle-form');
+    const btn3 = document.getElementById('theme-toggle-success');
+    
+    const updateBtn = (button) => {
+      if (button) {
+        button.innerHTML = '';
+        const icon = document.createElement('i');
+        if (themeMode === 'dark') {
+          icon.setAttribute('data-lucide', 'moon');
+          icon.style.color = '#60a5fa';
+        } else {
+          icon.setAttribute('data-lucide', 'sun');
+          icon.style.color = '#f59e0b';
+        }
+        icon.classList.add('w-5', 'h-5');
+        button.appendChild(icon);
+      }
+    };
+    
+    updateBtn(btn);
+    updateBtn(btn2);
+    updateBtn(btn3);
+    lucide.createIcons();
+  }
+
+  lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0ba480af3b7fdc3',t:'MTc4MTQ1MDAzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
