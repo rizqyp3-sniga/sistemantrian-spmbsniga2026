@@ -26,275 +26,385 @@
   <style>body { box-sizing: border-box; }</style>
  </head>
  <body class="h-full">
-  <div id="app" class="h-full w-full overflow-auto bg-slate-50"><!-- PAGE 1: Landing -->
-   <div id="page-landing" class="min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
-    <div class="w-full max-w-md text-center fade-in"><!-- Logo/Icon -->
-     <div class="mb-6 flex justify-center">
-      <img id="logo-img" src="https://cdn-sdotid.adg.id/images/c5c86b0b-3b3f-4177-84c6-b2ada8d3e1e2_716x716.webp.jpeg" alt="Logo Sekolah" class="w-20 h-20 rounded-2xl shadow-lg object-cover" loading="lazy" onerror="this.style.background='#2563eb';">
-     </div><!-- Title -->
-     <h1 id="title-text" class="text-2xl font-800 text-slate-800 mb-1">Sistem Antrian SPMB</h1>
-     <p id="school-text" class="text-lg font-600 text-blue-600 mb-2">SMP Negeri 3 Pemalang</p>
+  <div id="app" class="h-full w-full overflow-auto bg-slate-50">
+   <!-- PAGE 1: Landing -->
+   <div id="page-landing" class="min-h-full flex flex-col items-center justify-center px-4 py-8 relative">
+    <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+    <div class="w-full max-w-md text-center fade-in">
+     <div class="mb-8 flex justify-center">
+      <img id="logo-img" src="https://cdn-sdotid.adg.id/images/c5c86b0b-3b3f-4177-84c6-b2ada8d3e1e2_716x716.webp.jpeg" alt="Logo Sekolah" class="w-32 h-32 rounded-2xl shadow-lg object-cover" loading="lazy" onerror="this.style.background='#2563eb';">
+     </div>
+     <h1 id="title-text" class="text-4xl font-800 text-slate-800 mb-2">Sistem Antrian SPMB</h1>
+     <p id="school-text" class="text-2xl font-700 text-blue-600 mb-3">SMP Negeri 3 Pemalang</p>
      <p class="text-slate-500 text-sm mb-8">Tahun Pelajaran 2026/2027</p>
-     <p id="queue-day-info" class="text-sm font-600 text-blue-600 mb-6">Untuk Hari: <span id="next-day-name">-</span></p><!-- Queue Button --> <button id="btn-ambil" onclick="handleAmbilAntrian()" class="pulse-btn w-48 h-48 mx-auto rounded-full bg-blue-600 hover:bg-blue-700 transition-all duration-300 flex flex-col items-center justify-center text-white shadow-xl cursor-pointer active:scale-95"> <i data-lucide="ticket" class="w-12 h-12 mb-2"></i> <span class="text-lg font-700">Ambil Antrian</span> </button> <!-- Queue Info -->
-     <div class="mt-8 grid grid-cols-2 gap-4">
-      <div class="bg-red-50 rounded-xl p-4 shadow-sm border border-red-200">
-       <p class="text-xs text-red-600 uppercase tracking-wide font-600">Terpakai</p>
-       <p id="queue-used" class="text-3xl font-800 text-red-500 mt-1">0</p>
+     <p id="queue-day-info" class="text-sm font-600 text-blue-600 mb-6">Untuk Hari: <span id="next-day-name">-</span></p><button id="btn-ambil" onclick="handleAmbilAntrian()" class="pulse-btn w-48 h-48 mx-auto rounded-full bg-blue-600 hover:bg-blue-700 transition-all duration-300 flex flex-col items-center justify-center text-white shadow-xl cursor-pointer active:scale-95"> <i data-lucide="ticket" class="w-12 h-12 mb-2"></i> <span class="text-lg font-700">Ambil Antrian</span> </button>
+     <div class="mt-8 space-y-6">
+      <div>
+       <h3 class="text-center text-base font-800 bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent uppercase tracking-widest mb-3">Mandiri</h3>
+       <div class="grid grid-cols-2 gap-2">
+        <div class="rounded-lg p-3 shadow-sm">
+         <p class="text-xs uppercase tracking-wide font-600 mb-1">Terpakai</p>
+         <p id="mandiri-used" class="text-2xl font-800 mt-1">0</p>
+        </div>
+        <div class="rounded-lg p-3 shadow-sm">
+         <p class="text-xs uppercase tracking-wide font-600 mb-1">Sisa</p>
+         <p id="mandiri-remaining" class="text-2xl font-800 mt-1">300</p>
+        </div>
+       </div>
       </div>
-      <div class="bg-blue-50 rounded-xl p-4 shadow-sm border border-blue-200">
-       <p class="text-xs text-blue-600 uppercase tracking-wide font-600">Sisa</p>
-       <p id="queue-remaining" class="text-3xl font-800 text-blue-600 mt-1">300</p>
+      <div>
+       <h3 class="text-center text-base font-800 bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent uppercase tracking-widest mb-3">Kolektif</h3>
+       <div class="grid grid-cols-2 gap-2">
+        <div class="rounded-lg p-3 shadow-sm">
+         <p class="text-xs uppercase tracking-wide font-600 mb-1">Terpakai</p>
+         <p id="kolektif-used" class="text-2xl font-800 mt-1">0</p>
+        </div>
+        <div class="rounded-lg p-3 shadow-sm">
+         <p class="text-xs uppercase tracking-wide font-600 mb-1">Sisa</p>
+         <p id="kolektif-remaining" class="text-2xl font-800 mt-1">10</p>
+        </div>
+       </div>
       </div>
      </div>
-     <div id="queue-full-msg" class="hidden mt-4 bg-red-50 border border-red-200 rounded-xl p-3 text-red-600 text-sm font-500"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Maaf, antrian hari ini sudah penuh. Silakan coba lagi besok pukul 19.00.
+     <div id="queue-full-msg" class="hidden mt-4 bg-red-50 border border-red-200 rounded-xl p-3 text-red-600 text-sm font-500">
+      <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Maaf, antrian hari ini sudah penuh. Silakan coba lagi besok pukul 19.00.
      </div>
-     <div id="queue-closed-msg" class="hidden mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-yellow-700 text-sm font-500"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Antrian dibuka setiap hari pukul 19.00. Silakan datang kembali pada jam tersebut.
+     <div id="queue-closed-msg" class="hidden mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-yellow-700 text-sm font-500">
+      <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Antrian dibuka setiap hari pukul 19.00. Silakan datang kembali pada jam tersebut.
      </div>
     </div>
    </div><!-- PAGE 2: Form -->
-   <div id="page-form" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-form"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+   <div id="page-form" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative">
+    <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-form"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
     <div class="w-full max-w-md slide-up">
-     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6"><!-- Queue Number Display -->
+     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
       <div class="text-center mb-6">
        <p id="display-queue-number" class="text-6xl font-800 text-blue-600">001</p>
       </div>
       <div class="h-px bg-slate-100 mb-6"></div>
-      <h2 class="text-lg font-700 text-slate-800 mb-4">Lengkapi Data Pendaftaran</h2>
+      <h2 class="text-lg font-700 text-slate-800 mb-4">Pilih Status Verifikasi</h2>
       <form id="form-data" onsubmit="handleSubmitForm(event)" class="space-y-4">
-       <div><label for="waktu_daftar" class="block text-sm font-600 text-slate-600 mb-1">Waktu Daftar</label> <input type="text" id="waktu_daftar" readonly class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm">
-       </div>
-       <div><label for="nama_siswa" class="block text-sm font-600 text-slate-600 mb-1">Nama Lengkap Siswa</label> <input type="text" id="nama_siswa" required placeholder="Masukkan nama lengkap" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
-       </div>
-       <div><label for="asal_sekolah" class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label> <input type="text" id="asal_sekolah" required placeholder="Nama sekolah asal" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
-       </div>
-       <div><label for="nama_ortu" class="block text-sm font-600 text-slate-600 mb-1">Nama Orang Tua/Wali</label> <input type="text" id="nama_ortu" required placeholder="Nama orang tua/wali" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
-       </div>
-       <div><label for="no_wa" class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label> <input type="tel" id="no_wa" required placeholder="08xxxxxxxxxx" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
-       </div><button type="submit" id="btn-submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"> <i data-lucide="send" class="w-4 h-4"></i> <span id="btn-submit-text">Konfirmasi &amp; Kirim</span> </button>
+       <!-- Status Verifikasi -->
+       <div>
+        <label for="status_verifikasi" class="block text-sm font-600 text-slate-600 mb-1">Status Verifikasi</label> <select id="status_verifikasi" onchange="handleStatusChange()" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition"> <option value="">-- Pilih Status --</option> <option value="mandiri">Mandiri</option> <option value="kolektif">Kolektif Sekolah Asal</option> </select>
+       </div><!-- Jumlah Murid (kolektif only) -->
+       <div id="jumlah-section" class="hidden">
+        <label for="jumlah_murid" class="block text-sm font-600 text-slate-600 mb-1">Jumlah Calon Murid</label> <select id="jumlah_murid" onchange="handleJumlahChange()" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition"> <option value="">-- Pilih Jumlah --</option> <option value="1">1 Peserta</option> <option value="2">2 Peserta</option> <option value="3">3 Peserta</option> <option value="4">4 Peserta</option> <option value="5">5 Peserta</option> <option value="6">6 Peserta</option> <option value="7">7 Peserta</option> <option value="8">8 Peserta</option> <option value="9">9 Peserta</option> <option value="10">10 Peserta</option> <option value="11">11 Peserta</option> <option value="12">12 Peserta</option> <option value="13">13 Peserta</option> <option value="14">14 Peserta</option> <option value="15">15 Peserta</option> <option value="16">16 Peserta</option> <option value="17">17 Peserta</option> <option value="18">18 Peserta</option> <option value="19">19 Peserta</option> <option value="20">20 Peserta</option> </select>
+       </div><!-- Asal Sekolah (shared for kolektif) -->
+       <div id="asal-section" class="hidden">
+        <label for="asal_sekolah" class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label> <input type="text" id="asal_sekolah" placeholder="Nama sekolah asal" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+       </div><!-- Waktu Daftar -->
+       <div>
+        <label for="waktu_daftar" class="block text-sm font-600 text-slate-600 mb-1">Waktu Daftar</label> <input type="text" id="waktu_daftar" readonly class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm">
+       </div><!-- Dynamic Forms -->
+       <div id="forms-container" class="hidden">
+        <div class="bg-slate-50 p-3 rounded-lg mb-3">
+         <p class="text-sm font-600 text-slate-700">Form Data Pendaftaran</p>
+        </div>
+        <div id="dynamic-forms" class="space-y-4"></div>
+       </div><!-- Submit Button --> <button type="submit" id="btn-submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"> <i data-lucide="send" class="w-4 h-4"></i> <span id="btn-submit-text">Konfirmasi &amp; Kirim</span> </button>
       </form>
      </div>
     </div>
    </div><!-- PAGE 3: Success -->
-   <div id="page-success" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><!-- Theme Toggle Button --> <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-success"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+   <div id="page-success" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative">
+    <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-success"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
     <div class="w-full max-w-md text-center slide-up">
      <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
-      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="check-circle" class="w-8 h-8 text-emerald-600"></i>
+      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+       <i data-lucide="check-circle" class="w-8 h-8 text-emerald-600"></i>
       </div>
       <h2 class="text-xl font-700 text-slate-800 mb-2">Pendaftaran Berhasil!</h2>
       <p class="text-slate-500 text-sm mb-4">Data Anda telah tersimpan</p>
-      <div class="bg-gradient-to-b from-emerald-50 to-blue-50 rounded-2xl p-8 mb-6 flex flex-col items-center"><i data-lucide="check-circle" class="w-24 h-24 text-emerald-500 mb-4"></i>
+      <div class="bg-gradient-to-b from-emerald-50 to-blue-50 rounded-2xl p-8 mb-6 flex flex-col items-center">
+       <i data-lucide="check-circle" class="w-24 h-24 text-emerald-500 mb-4"></i>
        <p id="success-queue-number-large" class="text-6xl font-800 text-blue-600">001</p>
        <p class="text-slate-600 font-600 mt-2">Nomor Antrian Anda</p>
       </div>
-      <div id="success-details" class="text-left bg-slate-50 rounded-xl p-4 mb-6 text-sm space-y-1">
-      </div>
+      <div id="success-details" class="text-left bg-slate-50 rounded-xl p-4 mb-6 text-sm space-y-1"></div>
       <p id="success-day-info" class="text-sm font-600 text-blue-600 mb-4">Antrian Untuk Hari: <span id="success-day-name">-</span></p>
-      <div class="bg-blue-50 border-l-4 border-blue-600 rounded-lg p-4 mb-6">
-       <p class="text-blue-900 font-700 text-sm flex items-start gap-2"><i data-lucide="camera" class="w-5 h-5 flex-shrink-0 mt-0.5"></i> <span>Silakan Screenshot Layar Ini Sebagai Bukti Pendaftaran</span></p>
+      <div class="bg-blue-900 border-l-4 border-blue-400 rounded-lg p-4 mb-6" id="screenshot-box" style="background-color: #1e3a8a; border-left-color: #60a5fa;">
+       <p class="text-blue-100 font-700 text-sm flex items-start gap-2" style="color: #dbeafe;"><i data-lucide="camera" class="w-5 h-5 flex-shrink-0 mt-0.5"></i> <span>Silakan Screenshot Layar Ini Sebagai Bukti Pendaftaran</span></p>
       </div><button onclick="resetToLanding()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition text-sm"> Kembali ke Beranda </button>
      </div>
     </div>
    </div>
   </div>
   <script>
-  const DAILY_LIMIT = 300;
-  const QUEUE_OPEN_HOUR = 9; // Jam 09:00 (9 AM) - untuk testing, ubah ke 19 untuk production
-  const QUEUE_RESET_HOUR = 8; // Jam 08:00 (8 AM) untuk reset antrian
-  // Webhook URL untuk Google Sheets
-  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzXPZyWEq7nsTiPCu8OANV071YRbp4qqZ2iHz3ELbJhdA8647HAVPT9D8571WGH1xBQ5A/exec';
+    const DAILY_LIMIT_MANDIRI = 300;
+    const DAILY_LIMIT_KOLEKTIF = 10;
+    const QUEUE_OPEN_HOUR = 9;
+    const QUEUE_RESET_HOUR = 8;
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzXPZyWEq7nsTiPCu8OANV071YRbp4qqZ2iHz3ELbJhdA8647HAVPT9D8571WGH1xBQ5A/exec';
 
-  let allRecords = [];
-  let currentQueueNumber = 0;
-  let todayStr = new Date().toISOString().split('T')[0];
-  let nextDayStr = getNextDayStr();
-  let sdkReady = false;
+    let allRecords = [];
+    let currentQueueNumber = 0;
+    let todayStr = new Date().toISOString().split('T')[0];
+    let nextDayStr = getNextDayStr();
+    let sdkReady = false;
+    let currentStatus = '';
+    let jumlahMurid = 1;
 
-  // Fungsi untuk mendapatkan hari berikutnya
-  function getNextDayStr() {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().split('T')[0];
-  }
-
-  // Fungsi untuk mendapatkan nama hari dalam bahasa Indonesia
-  function getDayName(dateStr) {
-    const date = new Date(dateStr + 'T00:00:00');
-    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-    const dayName = days[date.getDay()];
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    return `${dayName}, ${day} ${month} ${year}`;
-  }
-
-  // Fungsi untuk mengecek apakah antrian sedang buka
-  function isQueueOpen() {
-    const now = new Date();
-    const currentHour = now.getHours();
-    return currentHour >= QUEUE_OPEN_HOUR;
-  }
-
-  // Default config
-  const defaultConfig = {
-    main_title: 'Sistem Antrian SPMB',
-    school_name: 'SMP Negeri 3 Pemalang',
-    theme_mode: 'light',
-    background_color: '#f8fafc',
-    primary_color: '#2563eb',
-    text_color: '#1e293b',
-    surface_color: '#ffffff',
-    accent_color: '#059669'
-  };
-
-  // Theme configurations
-  const themes = {
-    light: {
-      background: '#f8fafc',
-      surface: '#ffffff',
-      text: '#1e293b',
-      primary: '#2563eb',
-      accent: '#059669',
-      secondary: '#64748b',
-      border: '#e2e8f0'
-    },
-    dark: {
-      background: '#0f172a',
-      surface: '#1e293b',
-      text: '#f1f5f9',
-      primary: '#3b82f6',
-      accent: '#10b981',
-      secondary: '#cbd5e1',
-      border: '#334155'
+    function getNextDayStr() {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return tomorrow.toISOString().split('T')[0];
     }
-  };
 
-  // Element SDK
-  window.elementSdk.init({
-    defaultConfig,
-    onConfigChange: async (config) => {
-      const title = config.main_title || defaultConfig.main_title;
-      const school = config.school_name || defaultConfig.school_name;
-      const themeMode = config.theme_mode || defaultConfig.theme_mode;
-      const theme = themes[themeMode] || themes.light;
+    function getDayName(dateStr) {
+      const date = new Date(dateStr + 'T00:00:00');
+      const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      const dayName = days[date.getDay()];
+      const day = date.getDate();
+      const month = months[date.getMonth()];
+      const year = date.getFullYear();
+      return `${dayName}, ${day} ${month} ${year}`;
+    }
 
-      document.getElementById('title-text').textContent = title;
-      document.getElementById('school-text').textContent = school;
-      document.getElementById('app').style.backgroundColor = theme.background;
-      document.getElementById('app').style.color = theme.text;
+    function isQueueOpen() {
+      const now = new Date();
+      const currentHour = now.getHours();
+      return currentHour >= QUEUE_OPEN_HOUR;
+    }
 
-      // Update logo dengan border untuk dark theme
-      const logo = document.getElementById('logo-img');
-      if (logo) {
-        if (themeMode === 'dark') {
-          logo.style.border = '2px solid ' + theme.border;
-        } else {
-          logo.style.border = 'none';
+    const defaultConfig = {
+      main_title: 'Sistem Antrian SPMB',
+      school_name: 'SMP Negeri 3 Pemalang',
+      theme_mode: 'dark',
+      background_color: '#0f172a',
+      primary_color: '#3b82f6',
+      text_color: '#f1f5f9',
+      surface_color: '#1e293b',
+      accent_color: '#10b981'
+    };
+
+    const themes = {
+      light: {
+        background: '#f8fafc',
+        surface: '#ffffff',
+        text: '#1e293b',
+        primary: '#2563eb',
+        accent: '#059669',
+        secondary: '#64748b',
+        border: '#e2e8f0'
+      },
+      dark: {
+        background: '#0f172a',
+        surface: '#1e293b',
+        text: '#f1f5f9',
+        primary: '#3b82f6',
+        accent: '#10b981',
+        secondary: '#cbd5e1',
+        border: '#334155'
+      }
+    };
+
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (config) => {
+        const title = config.main_title || defaultConfig.main_title;
+        const school = config.school_name || defaultConfig.school_name;
+        const themeMode = config.theme_mode || defaultConfig.theme_mode;
+        const theme = themes[themeMode] || themes.light;
+
+        document.getElementById('title-text').textContent = title;
+        document.getElementById('school-text').textContent = school;
+        document.getElementById('app').style.backgroundColor = theme.background;
+        document.getElementById('app').style.color = theme.text;
+
+        // Update all text elements for dark mode visibility
+        document.querySelectorAll('p, span, h1, h2, h3, label, input::placeholder').forEach(el => {
+          if (el.className.includes('text-slate') || el.className.includes('text-blue') || el.className.includes('opacity')) {
+            el.style.color = theme.text;
+          }
+        });
+
+        const logo = document.getElementById('logo-img');
+        if (logo) {
+          if (themeMode === 'dark') {
+            logo.style.border = '2px solid ' + theme.border;
+          } else {
+            logo.style.border = 'none';
+          }
         }
-      }
 
-      // Update all elements with theme colors
-      document.getElementById('btn-ambil').style.backgroundColor = theme.primary;
-      document.getElementById('btn-ambil').style.color = '#ffffff';
-      document.getElementById('title-text').style.color = theme.text;
-      document.getElementById('school-text').style.color = theme.primary;
-      document.getElementById('queue-remaining').style.color = theme.accent;
+        document.getElementById('btn-ambil').style.backgroundColor = theme.primary;
+        document.getElementById('btn-ambil').style.color = '#ffffff';
+        document.getElementById('title-text').style.color = theme.text;
+        document.getElementById('school-text').style.color = theme.primary;
 
-      // Update form backgrounds
-      document.querySelectorAll('input[type="text"], input[type="tel"]').forEach(el => {
-        el.style.backgroundColor = theme.surface;
-        el.style.color = theme.text;
-        el.style.borderColor = theme.border;
-      });
-
-      // Update form labels
-      document.querySelectorAll('label').forEach(el => {
-        el.style.color = theme.text;
-      });
-
-      // Update cards
-      document.querySelectorAll('.bg-white').forEach(el => {
-        el.style.backgroundColor = theme.surface;
-        el.style.color = theme.text;
-        el.style.borderColor = theme.border;
-      });
-
-      // Update success detail section specifically
-      const successDetails = document.getElementById('success-details');
-      if (successDetails) {
-        successDetails.style.backgroundColor = theme.surface;
-        successDetails.style.color = theme.text;
-        successDetails.style.borderColor = theme.border;
-      }
-
-      // Update all text elements to theme text color
-      document.querySelectorAll('.text-slate-800, .text-slate-500, .text-slate-600, .text-slate-700').forEach(el => {
-        if (el.classList.contains('text-slate-800') || el.classList.contains('text-slate-700')) {
+        document.querySelectorAll('input[type="text"], input[type="tel"], select').forEach(el => {
+          el.style.backgroundColor = theme.surface;
           el.style.color = theme.text;
-        } else {
+          el.style.borderColor = theme.border;
+        });
+
+        document.querySelectorAll('input::placeholder').forEach(el => {
           el.style.color = theme.secondary;
+        });
+
+        document.querySelectorAll('label').forEach(el => {
+          el.style.color = theme.text;
+        });
+
+        document.querySelectorAll('p').forEach(el => {
+          el.style.color = theme.text;
+        });
+
+        document.querySelectorAll('.bg-white, .bg-slate-50').forEach(el => {
+          if (el.className.includes('bg-white')) {
+            el.style.backgroundColor = theme.surface;
+          } else {
+            el.style.backgroundColor = themeMode === 'dark' ? theme.surface : '#f1f5f9';
+          }
+          el.style.color = theme.text;
+          el.style.borderColor = theme.border;
+        });
+
+        document.querySelectorAll('.text-slate-600, .text-slate-500, .text-slate-700, .text-slate-800').forEach(el => {
+          el.style.color = theme.text;
+        });
+
+        // PENTING: Update warna text di kotak antrian setelah setiap theme change
+        const mandiriUsedBox = document.getElementById('mandiri-used').parentElement;
+        const mandiriRemainingBox = document.getElementById('mandiri-remaining').parentElement;
+        const kolektifUsedBox = document.getElementById('kolektif-used').parentElement;
+        const kolektifRemainingBox = document.getElementById('kolektif-remaining').parentElement;
+
+        // Mandiri Terpakai - warna merah tetap
+        mandiriUsedBox.querySelectorAll('p').forEach(p => {
+          p.style.color = '#991b1b';
+        });
+
+        // Mandiri Sisa - warna hijau tetap
+        mandiriRemainingBox.querySelectorAll('p').forEach(p => {
+          p.style.color = '#166534';
+        });
+
+        // Kolektif Terpakai - warna merah tetap
+        kolektifUsedBox.querySelectorAll('p').forEach(p => {
+          p.style.color = '#991b1b';
+        });
+
+        // Kolektif Sisa - warna hijau tetap
+        kolektifRemainingBox.querySelectorAll('p').forEach(p => {
+          p.style.color = '#166534';
+        });
+
+        // Update message boxes
+        document.querySelectorAll('[id*="msg"]').forEach(el => {
+          if (el.id.includes('full')) {
+            el.style.backgroundColor = themeMode === 'dark' ? '#7f1d1d' : '#fef2f2';
+            el.style.borderColor = themeMode === 'dark' ? '#dc2626' : '#fecaca';
+            el.style.color = themeMode === 'dark' ? '#fca5a5' : '#dc2626';
+          } else if (el.id.includes('closed')) {
+            el.style.backgroundColor = themeMode === 'dark' ? '#713f12' : '#fefce8';
+            el.style.borderColor = themeMode === 'dark' ? '#b45309' : '#fcd34d';
+            el.style.color = themeMode === 'dark' ? '#fde047' : '#713f12';
+          }
+        });
+
+        const successDetails = document.getElementById('success-details');
+        if (successDetails) {
+          successDetails.style.backgroundColor = theme.surface;
+          successDetails.style.color = theme.text;
         }
+
+        document.getElementById('display-queue-number').style.color = theme.primary;
+        document.getElementById('success-queue-number-large').style.color = theme.primary;
+
+        const backBtn = document.querySelector('button[onclick="resetToLanding()"]');
+        if (backBtn) {
+          backBtn.style.backgroundColor = theme.primary;
+        }
+      },
+      mapToCapabilities: (config) => ({
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ['main_title', config.main_title || defaultConfig.main_title],
+        ['school_name', config.school_name || defaultConfig.school_name],
+        ['theme_mode', config.theme_mode || defaultConfig.theme_mode]
+      ])
+    });
+
+    const dataHandler = {
+      onDataChanged(data) {
+        allRecords = data;
+        updateQueueDisplay();
+      }
+    };
+
+    function updateQueueDisplay() {
+      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+      
+      // Mandiri
+      const mandiriRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'mandiri');
+      const mandiriUsed = mandiriRecords.length;
+      const mandiriRemaining = Math.max(0, DAILY_LIMIT_MANDIRI - mandiriUsed);
+      
+      // Kolektif - hitung berdasarkan nomor antrian UNIK, bukan jumlah record
+      const kolektifRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'kolektif');
+      const uniqueKolektifNumbers = new Set(kolektifRecords.map(r => r.queue_number));
+      const kolektifUsed = uniqueKolektifNumbers.size;
+      const kolektifRemaining = Math.max(0, DAILY_LIMIT_KOLEKTIF - kolektifUsed);
+
+      // Update Mandiri box
+      document.getElementById('mandiri-used').textContent = mandiriUsed;
+      document.getElementById('mandiri-remaining').textContent = mandiriRemaining;
+      const mandiriUsedBox = document.getElementById('mandiri-used').parentElement;
+      const mandiriRemainingBox = document.getElementById('mandiri-remaining').parentElement;
+      
+      // Fixed colors - Terpakai warna merah soft, Sisa warna hijau soft
+      mandiriUsedBox.style.backgroundColor = '#fee2e2';
+      mandiriUsedBox.style.color = '#991b1b';
+      mandiriUsedBox.style.border = '2px solid #fecaca';
+      mandiriRemainingBox.style.backgroundColor = '#dcfce7';
+      mandiriRemainingBox.style.color = '#166534';
+      mandiriRemainingBox.style.border = '2px solid #bbf7d0';
+
+      // Update all text elements in mandiri boxes
+      mandiriUsedBox.querySelectorAll('p').forEach(p => {
+        p.style.color = '#991b1b';
+      });
+      mandiriRemainingBox.querySelectorAll('p').forEach(p => {
+        p.style.color = '#166534';
       });
 
-      // Update queue number display colors
-      document.getElementById('display-queue-number').style.color = theme.primary;
-      document.getElementById('success-queue-number-large').style.color = theme.primary;
-
-      // Update kotak terpakai dan sisa
-      const usedBox = document.querySelector('[id="queue-used"]')?.parentElement?.parentElement;
-      const remainingBox = document.querySelector('[id="queue-remaining"]')?.parentElement?.parentElement;
+      // Update Kolektif box
+      document.getElementById('kolektif-used').textContent = kolektifUsed;
+      document.getElementById('kolektif-remaining').textContent = kolektifRemaining;
+      const kolektifUsedBox = document.getElementById('kolektif-used').parentElement;
+      const kolektifRemainingBox = document.getElementById('kolektif-remaining').parentElement;
       
-      if (usedBox) {
-        usedBox.style.backgroundColor = themeMode === 'dark' ? '#7f1d1d' : '#fef2f2';
-        usedBox.style.borderColor = themeMode === 'dark' ? '#991b1b' : '#fecaca';
-      }
-      
-      if (remainingBox) {
-        remainingBox.style.backgroundColor = themeMode === 'dark' ? '#0c2340' : '#eff6ff';
-        remainingBox.style.borderColor = themeMode === 'dark' ? '#1e3a8a' : '#bfdbfe';
-      }
+      // Fixed colors - Terpakai warna merah soft, Sisa warna hijau soft
+      kolektifUsedBox.style.backgroundColor = '#fee2e2';
+      kolektifUsedBox.style.color = '#991b1b';
+      kolektifUsedBox.style.border = '2px solid #fecaca';
+      kolektifRemainingBox.style.backgroundColor = '#dcfce7';
+      kolektifRemainingBox.style.color = '#166534';
+      kolektifRemainingBox.style.border = '2px solid #bbf7d0';
 
-      // Update tombol kembali
-      const backBtn = document.querySelector('button[onclick="resetToLanding()"]');
-      if (backBtn) {
-        backBtn.style.backgroundColor = theme.primary;
-        backBtn.style.color = '#ffffff';
-      }
-    },
-    mapToCapabilities: (config) => ({
-      recolorables: [],
-      borderables: [],
-      fontEditable: undefined,
-      fontSizeable: undefined
-    }),
-    mapToEditPanelValues: (config) => new Map([
-      ['main_title', config.main_title || defaultConfig.main_title],
-      ['school_name', config.school_name || defaultConfig.school_name],
-      ['theme_mode', config.theme_mode || defaultConfig.theme_mode]
-    ])
-  });
+      // Update all text elements in kolektif boxes
+      kolektifUsedBox.querySelectorAll('p').forEach(p => {
+        p.style.color = '#991b1b';
+      });
+      kolektifRemainingBox.querySelectorAll('p').forEach(p => {
+        p.style.color = '#166534';
+      });
 
-  // Data SDK
-  const dataHandler = {
-    onDataChanged(data) {
-      allRecords = data;
-      
-      // Ambil data untuk hari berikutnya (ketika antrian buka)
-      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
-      const todayRecords = data.filter(r => r.tanggal === targetDay);
-      const used = todayRecords.length;
-      const remaining = Math.max(0, DAILY_LIMIT - used);
-
-      document.getElementById('queue-used').textContent = used;
-      document.getElementById('queue-remaining').textContent = remaining;
-
-      // Update tampilan hari antrian
       const dayName = getDayName(targetDay);
       if (document.getElementById('next-day-name')) {
         document.getElementById('next-day-name').textContent = dayName;
       }
 
-      if (remaining === 0) {
+      // Check queue full/closed status
+      const totalUsed = mandiriUsed + kolektifUsed;
+      if (mandiriRemaining === 0 && kolektifRemaining === 0) {
         document.getElementById('btn-ambil').disabled = true;
         document.getElementById('btn-ambil').classList.add('opacity-50');
         document.getElementById('queue-full-msg').classList.remove('hidden');
@@ -311,233 +421,404 @@
         document.getElementById('queue-closed-msg').classList.add('hidden');
       }
     }
-  };
 
-  (async () => {
-    const initResult = await window.dataSdk.init(dataHandler);
-    if (initResult.isOk) {
-      sdkReady = true;
-      console.log('Data SDK initialized successfully');
-    } else {
-      console.warn('Data SDK init warning:', initResult.error);
-      sdkReady = false;
-    }
-  })();
+    (async () => {
+      const initResult = await window.dataSdk.init(dataHandler);
+      if (initResult.isOk) {
+        sdkReady = true;
+        console.log('Data SDK initialized');
+        startPollingQueueData();
+      } else {
+        console.warn('Data SDK init warning');
+      }
+    })();
 
-  function getTodayCount() {
-    const targetDay = isQueueOpen() ? nextDayStr : todayStr;
-    return allRecords.filter(r => r.tanggal === targetDay).length;
-  }
+    let pollingInterval = null;
 
-  function handleAmbilAntrian() {
-    if (!isQueueOpen()) {
-      showInlineWarning('Antrian dibuka pukul 19.00. Silakan datang kembali pada jam tersebut.');
-      return;
-    }
-
-    const used = getTodayCount();
-    if (used >= DAILY_LIMIT) {
-      showInlineWarning('Maaf, antrian sudah penuh. Silakan coba lagi besok pukul 19.00.');
-      return;
-    }
-
-    currentQueueNumber = used + 1;
-    const formattedNum = String(currentQueueNumber).padStart(3, '0');
-
-    document.getElementById('display-queue-number').textContent = formattedNum;
-
-    const now = new Date();
-    const waktu = now.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
-    document.getElementById('waktu_daftar').value = waktu;
-
-    showPage('page-form');
-  }
-
-  async function handleSubmitForm(e) {
-    e.preventDefault();
-
-    const btn = document.getElementById('btn-submit');
-    const btnText = document.getElementById('btn-submit-text');
-    btn.disabled = true;
-    btnText.textContent = 'Mengirim...';
-
-    const nama = document.getElementById('nama_siswa').value.trim();
-    const asal = document.getElementById('asal_sekolah').value.trim();
-    const ortu = document.getElementById('nama_ortu').value.trim();
-    const wa = document.getElementById('no_wa').value.trim();
-    const waktu = document.getElementById('waktu_daftar').value;
-    const formattedNum = String(currentQueueNumber).padStart(3, '0');
-    const targetDay = isQueueOpen() ? nextDayStr : todayStr;
-
-    // Validasi input
-    if (!nama || !asal || !ortu || !wa) {
-      btn.disabled = false;
-      btnText.textContent = 'Konfirmasi & Kirim';
-      showInlineError('Mohon isi semua data dengan benar.');
-      return;
-    }
-
-    try {
-      // Try to save to Data SDK if ready
-      if (sdkReady && window.dataSdk) {
-        const result = await window.dataSdk.create({
-          queue_number: String(currentQueueNumber).padStart(3, '0'),
-          nama_siswa: nama,
-          asal_sekolah: asal,
-          nama_ortu: ortu,
-          no_wa: wa,
-          waktu_daftar: waktu,
-          tanggal: targetDay
-        });
-
-        if (!result.isOk) {
-          console.warn('Data SDK save warning (akan kirim via webhook):', result.error?.message);
-          // Lanjut ke halaman sukses meski SDK gagal, webhook akan menangani
+    function startPollingQueueData() {
+      if (pollingInterval) clearInterval(pollingInterval);
+      pollingInterval = setInterval(() => {
+        if (window.dataSdk) {
+          window.dataSdk.init(dataHandler).catch(err => {
+            console.warn('Polling error');
+          });
         }
+      }, 2000);
+    }
+
+    function getTodayCount() {
+      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+      
+      if (currentStatus === 'kolektif') {
+        // Untuk kolektif, hitung berdasarkan nomor antrian unik (bukan jumlah record anak)
+        const kolektifRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'kolektif');
+        const uniqueQueueNumbers = new Set(kolektifRecords.map(r => r.queue_number));
+        return uniqueQueueNumbers.size;
+      } else {
+        // Untuk mandiri, hitung berdasarkan jumlah record (1 record = 1 antrian)
+        const mandiriRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === currentStatus);
+        return mandiriRecords.length;
+      }
+    }
+
+    function handleAmbilAntrian() {
+      if (!isQueueOpen()) {
+        showInlineWarning('Antrian dibuka pukul 19.00. Silakan datang kembali pada jam tersebut.');
+        return;
       }
 
-      // Update success page elements immediately
-      document.getElementById('success-queue-number-large').textContent = formattedNum;
-      
-      // Update detail section
-      const successDetails = document.getElementById('success-details');
-      successDetails.innerHTML = `
+      currentStatus = '';
+      jumlahMurid = 1;
+      currentQueueNumber = 0;
+
+      const now = new Date();
+      const waktu = now.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+      document.getElementById('waktu_daftar').value = waktu;
+
+      document.getElementById('status_verifikasi').value = '';
+      document.getElementById('jumlah_murid').value = '';
+      document.getElementById('jumlah-section').classList.add('hidden');
+      document.getElementById('asal-section').classList.add('hidden');
+      document.getElementById('forms-container').classList.add('hidden');
+      document.getElementById('dynamic-forms').innerHTML = '';
+
+      showPage('page-form');
+    }
+
+    function handleStatusChange() {
+      const status = document.getElementById('status_verifikasi').value;
+      currentStatus = status;
+
+      if (!status) {
+        document.getElementById('jumlah-section').classList.add('hidden');
+        document.getElementById('asal-section').classList.add('hidden');
+        document.getElementById('forms-container').classList.add('hidden');
+        document.getElementById('dynamic-forms').innerHTML = '';
+        return;
+      }
+
+      const used = getTodayCount();
+      const dailyLimit = status === 'kolektif' ? DAILY_LIMIT_KOLEKTIF : DAILY_LIMIT_MANDIRI;
+      const remaining = Math.max(0, dailyLimit - used);
+
+      if (remaining === 0) {
+        showInlineError(`Maaf, antrian ${status === 'kolektif' ? 'Kolektif' : 'Mandiri'} hari ini sudah penuh.`);
+        return;
+      }
+
+      if (status === 'mandiri') {
+        currentQueueNumber = getNextAvailableQueueNumber('mandiri');
+        document.getElementById('display-queue-number').textContent = String(currentQueueNumber).padStart(3, '0');
+        document.getElementById('jumlah-section').classList.add('hidden');
+        document.getElementById('asal-section').classList.add('hidden');
+        generateMandiriForm();
+        document.getElementById('forms-container').classList.remove('hidden');
+      } else if (status === 'kolektif') {
+        document.getElementById('asal-section').classList.remove('hidden');
+        document.getElementById('jumlah-section').classList.remove('hidden');
+        document.getElementById('forms-container').classList.add('hidden');
+        document.getElementById('dynamic-forms').innerHTML = '';
+      }
+    }
+
+    function handleJumlahChange() {
+      const jumlah = parseInt(document.getElementById('jumlah_murid').value) || 0;
+
+      if (jumlah === 0) {
+        document.getElementById('forms-container').classList.add('hidden');
+        document.getElementById('dynamic-forms').innerHTML = '';
+        return;
+      }
+
+      const used = getTodayCount();
+      const remaining = DAILY_LIMIT_KOLEKTIF - used;
+
+      // Validasi: hanya cek apakah masih ada slot nomor antrian, bukan jumlah peserta
+      if (remaining <= 0) {
+        showInlineError(`Maaf, antrian Kolektif hari ini sudah penuh (10 nomor antrian sudah terpakai).`);
+        document.getElementById('jumlah_murid').value = '';
+        return;
+      }
+
+      jumlahMurid = jumlah;
+      currentQueueNumber = getNextAvailableQueueNumber('kolektif');
+      document.getElementById('display-queue-number').textContent = String(currentQueueNumber).padStart(3, '0');
+
+      generateKolektifForms(jumlah);
+      document.getElementById('forms-container').classList.remove('hidden');
+    }
+
+    function generateMandiriForm() {
+      const container = document.getElementById('dynamic-forms');
+      container.innerHTML = `
+        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3">
+          <div>
+            <label class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label>
+            <input type="text" class="asal_sekolah_form w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="Nama sekolah asal" required>
+          </div>
+          <div>
+            <label class="block text-sm font-600 text-slate-600 mb-1">Nama Lengkap Siswa</label>
+            <input type="text" class="nama_siswa w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="Masukkan nama lengkap" required>
+          </div>
+          <div>
+            <label class="block text-sm font-600 text-slate-600 mb-1">Nama Orang Tua/Wali</label>
+            <input type="text" class="nama_ortu w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="Nama orang tua/wali" required>
+          </div>
+          <div>
+            <label class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label>
+            <input type="tel" class="no_wa w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="08xxxxxxxxxx" required>
+          </div>
+        </div>
+      `;
+    }
+
+    function generateKolektifForms(jumlah) {
+      const container = document.getElementById('dynamic-forms');
+      container.innerHTML = '';
+
+      for (let i = 0; i < jumlah; i++) {
+        const form = document.createElement('div');
+        form.className = 'bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3';
+        form.innerHTML = `
+          <p class="text-sm font-600 text-slate-700 bg-blue-100 p-2 rounded">Peserta ${i + 1}</p>
+          <div>
+            <label class="block text-sm font-600 text-slate-600 mb-1">Nama Lengkap Siswa</label>
+            <input type="text" class="nama_siswa_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="Masukkan nama lengkap" required>
+          </div>
+          <div>
+            <label class="block text-sm font-600 text-slate-600 mb-1">Nama Orang Tua/Wali</label>
+            <input type="text" class="nama_ortu_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="Nama orang tua/wali" required>
+          </div>
+          <div>
+            <label class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label>
+            <input type="tel" class="no_wa_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="08xxxxxxxxxx" required>
+          </div>
+        `;
+        container.appendChild(form);
+      }
+    }
+
+    async function handleSubmitForm(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('btn-submit');
+      const btnText = document.getElementById('btn-submit-text');
+      btn.disabled = true;
+      btnText.textContent = 'Mengirim...';
+
+      const waktu = document.getElementById('waktu_daftar').value;
+      const asal = document.getElementById('asal_sekolah').value.trim();
+      const formattedNum = String(currentQueueNumber).padStart(3, '0');
+      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+
+      try {
+        if (currentStatus === 'mandiri') {
+          const nama = document.querySelector('.nama_siswa').value.trim();
+          const ortu = document.querySelector('.nama_ortu').value.trim();
+          const wa = document.querySelector('.no_wa').value.trim();
+          const asal = document.querySelector('.asal_sekolah_form').value.trim();
+
+          if (!nama || !asal || !ortu || !wa) {
+            btn.disabled = false;
+            btnText.textContent = 'Konfirmasi & Kirim';
+            showInlineError('Mohon isi semua data dengan benar.');
+            return;
+          }
+
+          await submitSingleRecord(formattedNum, nama, asal, ortu, wa, waktu, targetDay, currentStatus);
+          displaySuccessMandiri(formattedNum, nama, asal, ortu, wa, waktu, targetDay);
+
+        } else if (currentStatus === 'kolektif') {
+          if (!asal) {
+            btn.disabled = false;
+            btnText.textContent = 'Konfirmasi & Kirim';
+            showInlineError('Mohon isi asal sekolah.');
+            return;
+          }
+
+          // Submit dengan nomor antrian yang SAMA untuk semua peserta
+          for (let i = 0; i < jumlahMurid; i++) {
+            const nama = document.querySelector(`.nama_siswa_${i}`).value.trim();
+            const ortu = document.querySelector(`.nama_ortu_${i}`).value.trim();
+            const wa = document.querySelector(`.no_wa_${i}`).value.trim();
+
+            if (!nama || !ortu || !wa) {
+              showInlineError(`Mohon isi semua data untuk peserta ${i + 1}.`);
+              btn.disabled = false;
+              btnText.textContent = 'Konfirmasi & Kirim';
+              return;
+            }
+
+            // Semua peserta dalam grup kolektif = nomor antrian SAMA
+            await submitSingleRecord(formattedNum, nama, asal, ortu, wa, waktu, targetDay, currentStatus);
+          }
+
+          displaySuccessKolektif(formattedNum, asal, targetDay, waktu);
+        }
+
+        document.getElementById('form-data').reset();
+        btn.disabled = false;
+        btnText.textContent = 'Konfirmasi & Kirim';
+        showPage('page-success');
+
+      } catch (error) {
+        console.error('Submit error:', error);
+        btn.disabled = false;
+        btnText.textContent = 'Konfirmasi & Kirim';
+        showInlineError('Error: ' + (error.message || 'Terjadi kesalahan'));
+      }
+    }
+
+    function displaySuccessMandiri(queueNum, nama, asal, ortu, wa, waktu, targetDay) {
+      document.getElementById('success-queue-number-large').textContent = queueNum;
+      const dayName = getDayName(targetDay);
+      document.getElementById('success-day-name').textContent = dayName;
+      document.getElementById('success-details').innerHTML = `
         <p><span class="font-600">Nama:</span> ${escapeHtml(nama)}</p>
         <p><span class="font-600">Asal Sekolah:</span> ${escapeHtml(asal)}</p>
         <p><span class="font-600">Orang Tua:</span> ${escapeHtml(ortu)}</p>
         <p><span class="font-600">No. WA:</span> ${escapeHtml(wa)}</p>
         <p><span class="font-600">Waktu:</span> ${waktu}</p>
       `;
+    }
 
-      // Update hari antrian di halaman sukses
+    function displaySuccessKolektif(queueNum, asal, targetDay, waktu) {
+      document.getElementById('success-queue-number-large').textContent = queueNum;
       const dayName = getDayName(targetDay);
       document.getElementById('success-day-name').textContent = dayName;
+      document.getElementById('success-details').innerHTML = `
+        <p><span class="font-600">Status:</span> Kolektif Sekolah Asal</p>
+        <p><span class="font-600">Asal Sekolah:</span> ${escapeHtml(asal)}</p>
+        <p><span class="font-600">Jumlah Peserta:</span> ${jumlahMurid}</p>
+        <p><span class="font-600">Nomor Antrian:</span> ${queueNum}</p>
+        <p><span class="font-600">Waktu:</span> ${waktu}</p>
+      `;
+    }
 
-      // Reset form
-      document.getElementById('form-data').reset();
-      btn.disabled = false;
-      btnText.textContent = 'Konfirmasi & Kirim';
+    async function submitSingleRecord(queueNum, nama, asal, ortu, wa, waktu, targetDay, status) {
+      if (sdkReady && window.dataSdk) {
+        await window.dataSdk.create({
+          queue_number: queueNum,
+          nama_siswa: nama,
+          asal_sekolah: asal,
+          nama_ortu: ortu,
+          no_wa: wa,
+          waktu_daftar: waktu,
+          tanggal: targetDay,
+          status_verifikasi: status
+        });
+      }
 
-      // Kirim ke webhook Google Sheets (background, tidak blocking)
       const payload = {
-        queue_number: formattedNum,
+        queue_number: queueNum,
         nama_siswa: nama,
         asal_sekolah: asal,
         nama_ortu: ortu,
         no_wa: wa,
         waktu_daftar: waktu,
-        tanggal: targetDay
+        tanggal: targetDay,
+        status_verifikasi: status
       };
-      
-      console.log('Sending webhook payload:', payload);
-      console.log('Webhook URL:', WEBHOOK_URL);
-      
-      // Use fetch with error handling
+
       fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      }).then(res => {
-        console.log('✅ Webhook response status:', res.status);
-        console.log('✅ Webhook response:', res);
-        return res.text();
-      }).then(text => {
-        console.log('✅ Webhook response text:', text);
-      }).catch(err => {
-        console.error('❌ Webhook send error:', err);
-        console.error('❌ Error message:', err.message);
-      });
-
-      // Show success page immediately
-      showPage('page-success');
-
-    } catch (error) {
-      console.error('Submit error:', error);
-      btn.disabled = false;
-      btnText.textContent = 'Konfirmasi & Kirim';
-      showInlineError('Error: ' + (error.message || 'Terjadi kesalahan yang tidak diketahui'));
+      }).catch(err => console.error('Webhook error'));
     }
-  }
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  function showInlineError(msg) {
-    let el = document.getElementById('inline-error');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'inline-error';
-      el.className = 'bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl p-3 mt-3';
-      document.getElementById('form-data').appendChild(el);
-    }
-    el.textContent = msg;
-    el.classList.remove('hidden');
-    setTimeout(() => el.classList.add('hidden'), 4000);
-  }
-
-  function showInlineWarning(msg) {
-    let el = document.getElementById('inline-warning');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'inline-warning';
-      el.className = 'bg-yellow-50 border border-yellow-200 text-yellow-700 text-sm rounded-xl p-3 mt-4';
-      document.querySelector('.w-full.max-w-md').appendChild(el);
-    }
-    el.textContent = msg;
-    el.classList.remove('hidden');
-    setTimeout(() => el.classList.add('hidden'), 5000);
-  }
-
-  function showPage(pageId) {
-    ['page-landing', 'page-form', 'page-success'].forEach(id => {
-      document.getElementById(id).classList.add('hidden');
-    });
-    document.getElementById(pageId).classList.remove('hidden');
-  }
-
-  function resetToLanding() {
-    showPage('page-landing');
-  }
-
-  function toggleTheme() {
-    // Cek apakah SDK siap dengan optional chaining
-    if (!window.elementSdk?.config) {
-      console.warn('SDK belum siap, menggunakan fallback theme');
-      // Fallback: toggle theme manual tanpa SDK
-      const html = document.documentElement;
-      const currentTheme = html.getAttribute('data-theme') || 'light';
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      html.setAttribute('data-theme', newTheme);
-      updateThemeIcon(newTheme);
-      return;
-    }
-    
-    const currentTheme = window.elementSdk.config.theme_mode || defaultConfig.theme_mode;
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    window.elementSdk.setConfig({ theme_mode: newTheme });
-    updateThemeIcon(newTheme);
-  }
-
-  function updateThemeIcon(themeMode) {
-    // Update all theme toggle buttons
-    const toggleButtons = document.querySelectorAll('#theme-toggle, #theme-toggle-form, #theme-toggle-success');
-    toggleButtons.forEach(btn => {
-      const icon = btn.querySelector('[data-lucide]');
-      if (icon) {
-        const newIcon = themeMode === 'dark' ? 'moon' : 'sun';
-        const newColor = themeMode === 'dark' ? '#60a5fa' : '#f59e0b';
-        icon.setAttribute('data-lucide', newIcon);
-        icon.style.color = newColor;
+    function getNextAvailableQueueNumber(status) {
+      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+      
+      if (status === 'kolektif') {
+        // Cari nomor antrian unik untuk kolektif
+        const kolektifRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'kolektif');
+        const usedNumbers = new Set(kolektifRecords.map(r => parseInt(r.queue_number)));
+        
+        // Cari nomor pertama yang tersedia mulai dari 1
+        let nextNum = 1;
+        while (usedNumbers.has(nextNum)) {
+          nextNum++;
+        }
+        return nextNum;
+      } else {
+        // Untuk mandiri, cari nomor terbesar + 1
+        const mandiriRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'mandiri');
+        const usedNumbers = mandiriRecords.map(r => parseInt(r.queue_number));
+        return usedNumbers.length > 0 ? Math.max(...usedNumbers) + 1 : 1;
       }
-    });
-    lucide.createIcons();
-  }
+    }
 
-  lucide.createIcons();
-</script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0be0258f2cbdf0c',t:'MTc4MTQ4OTEyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function showInlineError(msg) {
+      let el = document.getElementById('inline-error');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'inline-error';
+        el.className = 'bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl p-3 mt-3';
+        document.getElementById('form-data').appendChild(el);
+      }
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 4000);
+    }
+
+    function showInlineWarning(msg) {
+      let el = document.getElementById('inline-warning');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'inline-warning';
+        el.className = 'bg-yellow-50 border border-yellow-200 text-yellow-700 text-sm rounded-xl p-3 mt-4';
+        document.querySelector('.w-full.max-w-md').appendChild(el);
+      }
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 5000);
+    }
+
+    function showPage(pageId) {
+      ['page-landing', 'page-form', 'page-success'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(pageId).classList.remove('hidden');
+    }
+
+    function resetToLanding() {
+      showPage('page-landing');
+    }
+
+    function toggleTheme() {
+      if (!window.elementSdk?.config) {
+        console.warn('SDK belum siap');
+        return;
+      }
+
+      const currentTheme = window.elementSdk.config.theme_mode || defaultConfig.theme_mode;
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      window.elementSdk.setConfig({ theme_mode: newTheme });
+      updateThemeIcon(newTheme);
+    }
+
+    function updateThemeIcon(themeMode) {
+      const toggleButtons = document.querySelectorAll('#theme-toggle, #theme-toggle-form, #theme-toggle-success');
+      toggleButtons.forEach(btn => {
+        const icon = btn.querySelector('[data-lucide]');
+        if (icon) {
+          const newIcon = themeMode === 'dark' ? 'moon' : 'sun';
+          const newColor = themeMode === 'dark' ? '#60a5fa' : '#f59e0b';
+          icon.setAttribute('data-lucide', newIcon);
+          icon.style.color = newColor;
+        }
+      });
+      lucide.createIcons();
+    }
+
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0c07de972e93ef7',t:'MTc4MTUxNTE1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
