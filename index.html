@@ -98,10 +98,10 @@
   </div>
   <script>
   const DAILY_LIMIT = 300;
-  const QUEUE_OPEN_HOUR = 19; // Jam 09:00 (7 PM)
-  const QUEUE_RESET_HOUR = 18; // Jam 08:00 (6 PM) untuk reset antrian
+  const QUEUE_OPEN_HOUR = 9; // Jam 09:00 (9 AM) - untuk testing, ubah ke 19 untuk production
+  const QUEUE_RESET_HOUR = 8; // Jam 08:00 (8 AM) untuk reset antrian
   // Webhook URL untuk Google Sheets
-  const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyXQlZD9dvLp0Dk2i9nX60H6p8jrYtoC8NgGFQBwHWLJAASbvq3fmGKHR0CnZIrF5nMQA/exec";
+  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzXPZyWEq7nsTiPCu8OANV071YRbp4qqZ2iHz3ELbJhdA8647HAVPT9D8571WGH1xBQ5A/exec';
 
   let allRecords = [];
   let currentQueueNumber = 0;
@@ -381,7 +381,7 @@
       // Try to save to Data SDK if ready
       if (sdkReady && window.dataSdk) {
         const result = await window.dataSdk.create({
-          queue_number: currentQueueNumber,
+          queue_number: String(currentQueueNumber).padStart(3, '0'),
           nama_siswa: nama,
           asal_sekolah: asal,
           nama_ortu: ortu,
@@ -391,14 +391,9 @@
         });
 
         if (!result.isOk) {
-          console.error('Create error:', result.error);
-          btn.disabled = false;
-          btnText.textContent = 'Konfirmasi & Kirim';
-          showInlineError('Gagal menyimpan data: ' + (result.error?.message || 'Unknown error'));
-          return;
+          console.warn('Data SDK save warning (akan kirim via webhook):', result.error?.message);
+          // Lanjut ke halaman sukses meski SDK gagal, webhook akan menangani
         }
-      } else {
-        console.warn('Data SDK not ready, data will be sent to webhook only');
       }
 
       // Update success page elements immediately
@@ -423,7 +418,7 @@
       btn.disabled = false;
       btnText.textContent = 'Konfirmasi & Kirim';
 
-      // Kirim ke webhook Google Sheets (async, background)
+      // Kirim ke webhook Google Sheets (background, tidak blocking)
       const payload = {
         queue_number: formattedNum,
         nama_siswa: nama,
@@ -434,13 +429,26 @@
         tanggal: targetDay
       };
       
+      console.log('Sending webhook payload:', payload);
+      console.log('Webhook URL:', WEBHOOK_URL);
+      
+      // Use fetch with error handling
       fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      }).catch(err => console.log('Webhook sent (background):', err));
+      }).then(res => {
+        console.log('✅ Webhook response status:', res.status);
+        console.log('✅ Webhook response:', res);
+        return res.text();
+      }).then(text => {
+        console.log('✅ Webhook response text:', text);
+      }).catch(err => {
+        console.error('❌ Webhook send error:', err);
+        console.error('❌ Error message:', err.message);
+      });
 
-      // Show success page
+      // Show success page immediately
       showPage('page-success');
 
     } catch (error) {
@@ -495,8 +503,15 @@
   }
 
   function toggleTheme() {
-    if (!sdkReady) {
-      console.error('SDK not ready yet');
+    // Cek apakah SDK siap dengan optional chaining
+    if (!window.elementSdk?.config) {
+      console.warn('SDK belum siap, menggunakan fallback theme');
+      // Fallback: toggle theme manual tanpa SDK
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      updateThemeIcon(newTheme);
       return;
     }
     
@@ -524,5 +539,5 @@
 
   lucide.createIcons();
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0baa978755f9f6b',t:'MTc4MTQ1NDAyMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0be0258f2cbdf0c',t:'MTc4MTQ4OTEyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
