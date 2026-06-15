@@ -98,10 +98,10 @@
   </div>
   <script>
   const DAILY_LIMIT = 300;
-  const QUEUE_OPEN_HOUR = 19; // Jam 19:00 (7 PM)
-  const QUEUE_RESET_HOUR = 18; // Jam 18:00 (6 PM) untuk reset antrian
+  const QUEUE_OPEN_HOUR = 19; // Jam 09:00 (7 PM)
+  const QUEUE_RESET_HOUR = 18; // Jam 08:00 (6 PM) untuk reset antrian
   // Webhook URL untuk Google Sheets
-  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyXQlZD9dvLp0Dk2i9nX60H6p8jrYtoC8NgGFQBwHWLJAASbvq3fmGKHR0CnZIrF5nMQA/exec';
+  const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyXQlZD9dvLp0Dk2i9nX60H6p8jrYtoC8NgGFQBwHWLJAASbvq3fmGKHR0CnZIrF5nMQA/exec";
 
   let allRecords = [];
   let currentQueueNumber = 0;
