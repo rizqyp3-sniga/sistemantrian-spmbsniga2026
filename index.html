@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Antrian SPMB - SMP Negeri 3 Pemalang</title>
   
+  <!-- Meta Tags untuk SEO dan Social Media (Open Graph) -->
+  <meta name="description" content="Sistem Antrian Online Verifikasi Berkas SPMB SMP Negeri 3 Pemalang. Ambil nomor antrian dengan mudah dan cepat.">
+  <meta property="og:title" content="Antrian SPMB - SMP Negeri 3 Pemalang">
+  <meta property="og:description" content="Sistem Antrian Online Verifikasi Berkas SPMB SMP Negeri 3 Pemalang. Ambil nomor antrian dengan mudah dan cepat.">
+  <meta property="og:image" content="https://cdn-sdotid.adg.id/images/c5c86b0b-3b3f-4177-84c6-b2ada8d3e1e2_716x716.webp.jpeg">
+  <meta property="og:type" content="website">
+  <meta name="author" content="SMP Negeri 3 Pemalang">
+
+  <link rel="icon" type="image/x-icon" href="https://cdn-sdotid.adg.id/images/c5c86b0b-3b3f-4177-84c6-b2ada8d3e1e2_716x716.webp.jpeg">
+  
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -31,10 +41,10 @@
     #app { height: 100%; width: 100%; }
     .pulse-btn { animation: pulse-ring 2s infinite; }
     @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
-    .fade-in { animation: fadeIn 0.4s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .slide-up { animation: slideUp 0.5s ease-out; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .slide-up { animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
     .landing-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); color: #f1f5f9; }
     body.light-theme .landing-bg { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%); color: #1e293b; }
     .landing-school { color: #60a5fa; } body.light-theme .landing-school { color: #2563eb; }
@@ -84,14 +94,14 @@
      <h1 id="title-text" class="text-2xl font-800 mb-1 landing-title text-center">Sistem Antrian SPMB</h1>
      <p id="school-text" class="text-sm font-700 mb-2 landing-school text-center">SMP Negeri 3 Pemalang</p>
      <p class="text-xs font-600 tracking-wider landing-subtitle text-center mb-6">T.P 2026/2027</p>
-     <p class="text-xs uppercase tracking-wide font-700 landing-label mb-3 text-center">Status Hari Ini</p>
-     <div class="px-3 py-2 landing-status rounded-lg landing-status-text text-xs font-600 text-center landing-status-border animate-pulse mb-6"><span id="next-day-name">Memuat Data...</span></div>
+     <p class="text-xs uppercase tracking-wide font-700 landing-label mb-2 text-center">Jadwal Sesi Verifikasi</p>
+     <div class="px-3 py-2 landing-status rounded-lg landing-status-text text-xs font-800 text-center landing-status-border animate-pulse mb-6"><span id="next-day-name">Sinkronisasi Jadwal...</span></div>
      
      <button id="btn-ambil" onclick="handleAmbilAntrian()" class="pulse-btn w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition-all duration-300 flex flex-col items-center justify-center text-white shadow-2xl cursor-pointer active:scale-95 border-4 border-blue-400/30 mb-6"> <i data-lucide="ticket" class="w-10 h-10 mb-1"></i> <span class="text-sm font-800">Ambil Antrian</span> </button>
      
      <div class="grid grid-cols-2 gap-3 w-full max-w-sm mb-4 px-4">
       <div class="landing-stats-mandiri backdrop-blur-md rounded-2xl p-4 landing-stats-mandiri-border flex flex-col">
-       <p class="text-xs uppercase tracking-wide font-700 landing-stats-mandiri-label mb-2">Status Mandiri</p>
+       <p class="text-xs uppercase tracking-wide font-700 landing-stats-mandiri-label mb-2 text-center">Kuota Mandiri</p>
        <div class="grid grid-cols-2 gap-2">
         <div class="landing-stats-mandiri-item rounded-lg p-2 text-center">
          <p class="text-xs font-600 landing-stats-mandiri-text mb-1">Terpakai</p>
@@ -99,12 +109,12 @@
         </div>
         <div class="landing-stats-mandiri-item2 rounded-lg p-2 text-center">
          <p class="text-xs font-600 landing-stats-mandiri-text mb-1">Sisa</p>
-         <p id="mandiri-remaining" class="text-lg font-800 landing-stats-number">-</p>
+         <p id="mandiri-remaining" class="text-lg font-800 landing-stats-number">300</p>
         </div>
        </div>
       </div>
       <div class="landing-stats-kolektif backdrop-blur-md rounded-2xl p-4 landing-stats-kolektif-border flex flex-col">
-       <p class="text-xs uppercase tracking-wide font-700 landing-stats-kolektif-label mb-2">Status Kolektif</p>
+       <p class="text-xs uppercase tracking-wide font-700 landing-stats-kolektif-label mb-2 text-center">Kuota Kolektif</p>
        <div class="grid grid-cols-2 gap-2">
         <div class="landing-stats-kolektif-item rounded-lg p-2 text-center">
          <p class="text-xs font-600 landing-stats-kolektif-text mb-1">Terpakai</p>
@@ -112,13 +122,17 @@
         </div>
         <div class="landing-stats-kolektif-item2 rounded-lg p-2 text-center">
          <p class="text-xs font-600 landing-stats-kolektif-text mb-1">Sisa</p>
-         <p id="kolektif-remaining" class="text-lg font-800 landing-stats-number">-</p>
+         <p id="kolektif-remaining" class="text-lg font-800 landing-stats-number">10</p>
         </div>
        </div>
       </div>
      </div>
-     <div id="queue-full-msg" class="hidden landing-msg-error border landing-msg-error-border rounded-lg px-4 py-2 landing-msg-error-text text-xs font-600 backdrop-blur-md max-w-sm mb-4"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-2"></i>Antrian penuh. Coba besok pukul 19.00.</div>
+     <div id="queue-full-msg" class="hidden landing-msg-error border landing-msg-error-border rounded-lg px-4 py-2 landing-msg-error-text text-xs font-800 backdrop-blur-md max-w-sm mb-4 text-center shadow-lg"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-2"></i><span id="full-msg-text">Mohon maaf, kuota pendaftaran untuk jadwal verifikasi telah terpenuhi.</span></div>
      <div id="queue-closed-msg" class="hidden landing-msg-warning border landing-msg-warning-border rounded-lg px-4 py-2 landing-msg-warning-text text-xs font-600 backdrop-blur-md max-w-sm mb-4"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-2"></i>Antrian dibuka pukul 19.00.</div>
+     
+     <footer class="mt-auto py-8 opacity-40 hover:opacity-100 transition-opacity duration-700">
+       <p class="text-[9px] font-800 tracking-[0.3em] landing-subtitle text-center">Designed by <a href="https://www.instagram.com/rizqyp3?igsh=MTE1eGE4MDgybzQyNA==" target="_blank" class="text-blue-500 hover:underline">rizqy p3</a></p>
+     </footer>
     </div>
    </div>
 
@@ -270,7 +284,7 @@
      </div>
 
      <div class="flex items-center justify-between pt-2">
-       <p class="text-[10px] text-slate-400 italic">Data diperbarui otomatis setiap 10 detik</p>
+       <p class="text-[10px] text-slate-400 italic">Terakhir diperbarui: <span id="admin-last-update">-</span> (10 dtk)</p>
        <div class="flex gap-2">
          <button type="button" onclick="logoutAdmin()" class="px-6 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-700 rounded-xl transition flex items-center gap-2"> <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout </button>
          <button type="button" onclick="showPage('page-landing')" class="px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-700 rounded-xl transition"> Tutup </button>
@@ -285,26 +299,30 @@
     const CONFIG = {
       main_title: 'Sistem Antrian SPMB',
       school_name: 'SMP Negeri 3 Pemalang',
-      webhook_url: 'https://script.google.com/macros/s/AKfycbyEWiMeYDy649PKOWD0OU2Tk7cepILwr9-a6i1aIG4X_R9GFObsDirJyCgFwoZsbvsr/exec'
+  webhook_url: 'https://script.google.com/macros/s/AKfycbztQBQS4qnEQcOt61Lm-SQdsLAXGXd14X_dzo69IMNvJgN7h16dQjrCIbfc4Lhg_pXBCw/exec' // Ganti dengan URL Web App yang baru Anda dapatkan
     };
 
-    const DAILY_LIMIT_MANDIRI = 300;
-    const DAILY_LIMIT_KOLEKTIF = 10;
+    const DAILY_LIMIT_MANDIRI = 50; // Ubah angka ini untuk kuota Mandiri
+    const DAILY_LIMIT_KOLEKTIF = 10; // Ubah angka ini untuk kuota Kolektif
     
-    let todayStr = new Date().toISOString().split('T')[0];
-    let nextDayStr = getNextDayStr();
+    // Fungsi pembantu untuk mendapatkan tanggal lokal (Asia/Jakarta) format YYYY-MM-DD
+    function getJakartaDateStr(offsetDays = 0) {
+      const date = new Date();
+      date.setDate(date.getDate() + offsetDays);
+      return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Jakarta' }).format(date);
+    }
+
+    let todayStr = getJakartaDateStr(0);
+    let nextDayStr = getJakartaDateStr(1);
     let currentStatus = '';
     let jumlahMurid = 1;
     let adminMode = false; // Tambahkan variabel untuk mode admin
+    let mandiriUsedCount = 0;
+    let kolektifUsedCount = 0;
     let clockInterval;
     let adminRefreshInterval;
+    let landingRefreshInterval;
     let currentAdminData = []; // Untuk simpan data yang akan di download
-
-    function getNextDayStr() {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      return tomorrow.toISOString().split('T')[0];
-    }
 
     function getDayName(dateStr) {
       const date = new Date(dateStr + 'T00:00:00');
@@ -313,27 +331,51 @@
       return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
     }
 
-    // Sistem ditutup hanya dari pukul 18.00 hingga 18.59
+    // Mendapatkan jam dan menit Jakarta untuk logika pembukaan
+    function getJakartaTime() {
+      const options = { timeZone: 'Asia/Jakarta', hour: 'numeric', minute: 'numeric', hour12: false };
+      const parts = new Intl.DateTimeFormat('id-ID', options).formatToParts(new Date());
+      const hour = parseInt(parts.find(p => p.type === 'hour').value);
+      const minute = parseInt(parts.find(p => p.type === 'minute').value);
+      return { hour, minute, totalMinutes: (hour * 60) + minute };
+    }
+
     function isQueueOpen() {
-      const currentHour = new Date().getHours();
-      if (currentHour === 18) return false;
-      return true;
+      // MODE TESTING: DIBUKA FULL SEKARANG
+      return true; 
+      
+      // SETTING NORMAL (19.00):
+      // const time = getJakartaTime();
+      // return time.totalMinutes >= 1140 || time.totalMinutes < 702; // Buka 19:00 sampai sesi siang besok selesai
+    }
+
+    function getTargetDay() {
+      // MODE TESTING: TARGET SELALU UNTUK BESOK
+      return getJakartaDateStr(1);
+
+      // SETTING NORMAL (19.00):
+      // const time = getJakartaTime();
+      // return (time.totalMinutes >= 1140) ? getJakartaDateStr(1) : getJakartaDateStr(0);
     }
 
     // MENGAMBIL SISA KUOTA ASLI DARI SERVER GOOGLE SHEETS
     async function updateQueueDisplayFromServer() {
-      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
-      document.getElementById('next-day-name').textContent = getDayName(targetDay);
+      const targetDay = getTargetDay();
+      const dayNameEl = document.getElementById('next-day-name');
       
       try {
-        const response = await fetch(CONFIG.webhook_url + "?tanggal=" + targetDay);
+        console.log(`[updateQueueDisplayFromServer] Fetching data for ${targetDay}...`);
+        const response = await fetch(`${CONFIG.webhook_url}?tanggal=${targetDay}&_t=${Date.now()}`);
         const result = await response.json();
         
-        const mandiriUsed = result.mandiri_used;
+        const mandiriUsed = parseInt(result.mandiri_used) || 0;
         const mandiriRemaining = Math.max(0, DAILY_LIMIT_MANDIRI - mandiriUsed);
-        const kolektifUsed = result.kolektif_used;
+        const kolektifUsed = parseInt(result.kolektif_used) || 0;
         const kolektifRemaining = Math.max(0, DAILY_LIMIT_KOLEKTIF - kolektifUsed);
+        mandiriUsedCount = mandiriUsed;
+        kolektifUsedCount = kolektifUsed;
 
+        dayNameEl.textContent = getDayName(targetDay);
         document.getElementById('mandiri-used').textContent = mandiriUsed;
         document.getElementById('mandiri-remaining').textContent = mandiriRemaining;
         document.getElementById('kolektif-used').textContent = kolektifUsed;
@@ -342,26 +384,29 @@
         const btnAmbil = document.getElementById('btn-ambil');
         if (mandiriRemaining === 0 && kolektifRemaining === 0) {
           btnAmbil.disabled = true;
-          btnAmbil.classList.add('opacity-50');
+          btnAmbil.classList.add('opacity-50', 'cursor-not-allowed');
+          document.getElementById('full-msg-text').textContent = `Mohon maaf, kuota verifikasi untuk hari ${getDayName(targetDay)} telah terpenuhi. Silakan kembali esok hari pukul 19.00 WIB.`;
           document.getElementById('queue-full-msg').classList.remove('hidden');
         } else if (!isQueueOpen()) {
           btnAmbil.disabled = true;
-          btnAmbil.classList.add('opacity-50');
+          btnAmbil.classList.add('opacity-50', 'cursor-not-allowed');
+          document.getElementById('queue-closed-msg').innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 inline mr-2"></i>Pendaftaran sesi berikutnya dibuka pukul 19.00 WIB.`;
           document.getElementById('queue-closed-msg').classList.remove('hidden');
         } else {
           btnAmbil.disabled = false;
-          btnAmbil.classList.remove('opacity-50');
+          btnAmbil.classList.remove('opacity-50', 'cursor-not-allowed');
           document.getElementById('queue-full-msg').classList.add('hidden');
           document.getElementById('queue-closed-msg').classList.add('hidden');
         }
       } catch (e) {
-         console.log("Menunggu sinkronisasi server...", e);
+         console.error("Gagal memperbarui kuota di landing page:", e);
+         console.log("Sinkronisasi server...", e);
       }
     }
 
     function initApp() {
         if (localStorage.getItem('theme_mode') === 'light') document.body.classList.add('light-theme');
-        updateQueueDisplayFromServer();
+        showPage('page-landing');
         lucide.createIcons();
     }
 
@@ -416,9 +461,20 @@
 
     function handleAmbilAntrian() {
       if (!isQueueOpen()) {
-        showInlineWarning('Antrian sedang ditutup untuk rekapitulasi. Buka kembali pukul 19.00 WIB.');
+        showInlineWarning('Antrian sedang tutup (Rekapitulasi). Buka kembali pukul 19.00 WIB untuk antrian besok.');
         return;
       }
+
+      // Validasi cepat di sisi client sebelum masuk form
+      const mandiriRem = parseInt(document.getElementById('mandiri-remaining').textContent) || 0;
+      const kolektifRem = parseInt(document.getElementById('kolektif-remaining').textContent) || 0;
+      if (mandiriRem <= 0 && kolektifRem <= 0) {
+        showInlineWarning('Maaf, kuota antrian untuk sesi ini sudah habis.');
+        const targetDay = getTargetDay();
+        showInlineWarning(`Mohon maaf, kuota pendaftaran untuk jadwal verifikasi hari ${getDayName(targetDay)} telah terpenuhi. Silakan mencoba kembali esok hari.`);
+        return;
+      }
+
       currentStatus = '';
       jumlahMurid = 1;
       document.getElementById('display-queue-number').textContent = '---';
@@ -449,18 +505,43 @@
 
     function handleStatusChange() {
       currentStatus = document.getElementById('status_verifikasi').value;
+      
+      // Cek apakah kuota spesifik masih tersedia
+      const mandiriRem = parseInt(document.getElementById('mandiri-remaining').textContent) || 0;
+      const kolektifRem = parseInt(document.getElementById('kolektif-remaining').textContent) || 0;
+
       if (!currentStatus) {
+        document.getElementById('display-queue-number').textContent = '---';
         document.getElementById('jumlah-section').classList.add('hidden');
         document.getElementById('asal-section').classList.add('hidden');
         document.getElementById('forms-container').classList.add('hidden');
         return;
       }
+
       if (currentStatus === 'mandiri') {
+        if (mandiriRem <= 0) {
+          const targetDay = getTargetDay();
+          showInlineError(`Mohon maaf, kuota MANDIRI untuk verifikasi hari ${getDayName(targetDay)} sudah habis. Silakan pilih jalur Kolektif atau kembali esok hari.`);
+          document.getElementById('status_verifikasi').value = '';
+          handleStatusChange();
+          return;
+        }
+        const nextNum = ("000" + (mandiriUsedCount + 1)).slice(-3);
+        document.getElementById('display-queue-number').textContent = 'M-' + nextNum;
         document.getElementById('jumlah-section').classList.add('hidden');
         document.getElementById('asal-section').classList.add('hidden');
         generateMandiriForm();
         document.getElementById('forms-container').classList.remove('hidden');
       } else if (currentStatus === 'kolektif') {
+        if (kolektifRem <= 0) {
+          const targetDay = getTargetDay();
+          showInlineError(`Mohon maaf, kuota KOLEKTIF untuk verifikasi hari ${getDayName(targetDay)} sudah habis. Silakan kembali esok hari.`);
+          document.getElementById('status_verifikasi').value = '';
+          handleStatusChange();
+          return;
+        }
+        const nextNum = ("000" + (kolektifUsedCount + 1)).slice(-3);
+        document.getElementById('display-queue-number').textContent = 'K-' + nextNum;
         document.getElementById('asal-section').classList.remove('hidden');
         document.getElementById('jumlah-section').classList.remove('hidden');
         document.getElementById('forms-container').classList.add('hidden');
@@ -507,10 +588,20 @@
       e.preventDefault();
       const btn = document.getElementById('btn-submit');
       const btnText = document.getElementById('btn-submit-text');
+      
+      // Cek limit lokal satu kali lagi sebelum fetch
+      const mandiriRem = parseInt(document.getElementById('mandiri-remaining').textContent) || 0;
+      const kolektifRem = parseInt(document.getElementById('kolektif-remaining').textContent) || 0;
+      
+      if ((currentStatus === 'mandiri' && mandiriRem <= 0) || (currentStatus === 'kolektif' && kolektifRem <= 0)) {
+        showInlineError('Maaf, kuota baru saja habis. Pendaftaran dibatalkan.');
+        return;
+      }
+
       btn.disabled = true;
       btnText.textContent = 'Meminta Antrian ke Server...';
 
-      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+      const targetDay = getTargetDay();
       let payload = {
          targetDay: targetDay,
          status_verifikasi: currentStatus,
@@ -564,7 +655,7 @@
           document.getElementById('form-data').reset();
           showPage('page-success');
         } else {
-          showInlineError('Gagal mendapatkan respon valid dari server.');
+          showInlineError(result.message || 'Gagal mendapatkan nomor antrian.');
         }
       } catch (error) {
         showInlineError('Koneksi ke server gagal. Pastikan URL Webhook benar.');
@@ -581,6 +672,7 @@
         if (!el) { el = document.createElement('div'); el.className = 'inline-error bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl p-3 mt-3'; form.appendChild(el); }
         el.textContent = msg; el.classList.remove('hidden');
         setTimeout(() => el.classList.add('hidden'), 4000);
+        setTimeout(() => el.classList.add('hidden'), 8000);
       }
     }
 
@@ -591,6 +683,7 @@
         if (!el) { el = document.createElement('div'); el.className = 'inline-warning bg-yellow-50 border border-yellow-200 text-yellow-700 text-sm rounded-xl p-3 mt-4'; landing.appendChild(el); }
         el.textContent = msg; el.classList.remove('hidden');
         setTimeout(() => el.classList.add('hidden'), 5000);
+        setTimeout(() => el.classList.add('hidden'), 8000);
       }
     }
 
@@ -637,13 +730,15 @@
     }
 
     async function updateAdminDashboard() {
-      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+      const targetDay = getTargetDay();
       try {
         // Menambahkan parameter ?admin=true agar server mengirimkan data lengkap
-        const response = await fetch(CONFIG.webhook_url + "?admin=true&tanggal=" + targetDay);
+        // Tambahkan timestamp (_t) agar data real-time
+        const response = await fetch(`${CONFIG.webhook_url}?admin=true&tanggal=${targetDay}&_t=${Date.now()}`);
         const result = await response.json();
         document.getElementById('admin-stat-mandiri').textContent = result.mandiri_used;
         document.getElementById('admin-stat-kolektif').textContent = result.kolektif_used;
+        document.getElementById('admin-last-update').textContent = new Date().toLocaleTimeString('id-ID');
         
         currentAdminData = result.data || [];
         const tbody = document.getElementById('admin-table-body');
@@ -708,6 +803,9 @@
       // Kelola Real-time Dashboard Admin
       if (adminRefreshInterval) clearInterval(adminRefreshInterval);
 
+      // Kelola Real-time Landing Page (Auto Refresh Kuota)
+      if (landingRefreshInterval) clearInterval(landingRefreshInterval);
+
       // Clear search results when leaving search page
       if (pageId !== 'page-search') {
         const res = document.getElementById('public-search-results');
@@ -722,6 +820,13 @@
       // Update adminMode state
       adminMode = (pageId === 'page-admin');
       
+      // Jika kembali ke landing, update data kuota
+      if (pageId === 'page-landing') {
+        updateQueueDisplayFromServer();
+        // Refresh data kuota setiap 5 detik agar update terlihat real-time saat tes/trafik tinggi
+        landingRefreshInterval = setInterval(updateQueueDisplayFromServer, 5000);
+      }
+
       if (adminMode) {
         updateAdminDashboard();
         // Refresh otomatis setiap 10 detik di halaman admin
