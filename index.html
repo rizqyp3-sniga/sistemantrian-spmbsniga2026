@@ -178,7 +178,7 @@
     const CONFIG = {
       main_title: 'Sistem Antrian SPMB',
       school_name: 'SMP Negeri 3 Pemalang',
-      webhook_url: 'https://script.google.com/macros/s/AKfycbwEQyyZwYEtZnOySgWD0E1wrvdk4zkItTt-UrGuNcGpUSfFsMsdfUlFt60hRz4d2n99zA/exec'
+      webhook_url: 'https://script.google.com/macros/s/AKfycbxleXGbANIpB1IusH3vc-Pfewdr1bIdSTIehkvVbj_Q7iYZDUbrrE6nSwitUUqvla8urg/exec'
     };
 
     const DAILY_LIMIT_MANDIRI = 300;
@@ -188,6 +188,7 @@
     let nextDayStr = getNextDayStr();
     let currentStatus = '';
     let jumlahMurid = 1;
+    let clockInterval;
 
     function getNextDayStr() {
       const tomorrow = new Date();
@@ -272,13 +273,29 @@
       currentStatus = '';
       jumlahMurid = 1;
       document.getElementById('display-queue-number').textContent = '---';
-      const now = new Date();
-      document.getElementById('waktu_daftar').value = now.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+      startRealtimeClock();
       document.getElementById('form-data').reset();
       document.getElementById('jumlah-section').classList.add('hidden');
       document.getElementById('asal-section').classList.add('hidden');
       document.getElementById('forms-container').classList.add('hidden');
       showPage('page-form');
+    }
+
+    function startRealtimeClock() {
+      if (clockInterval) clearInterval(clockInterval);
+      const waktuInput = document.getElementById('waktu_daftar');
+      
+      const updateClock = () => {
+        const now = new Date();
+        // Menggunakan timeStyle 'medium' agar detik terlihat (HH:mm:ss)
+        waktuInput.value = now.toLocaleString('id-ID', { 
+          dateStyle: 'long', 
+          timeStyle: 'medium' 
+        });
+      };
+      
+      updateClock();
+      clockInterval = setInterval(updateClock, 1000);
     }
 
     function handleStatusChange() {
@@ -314,11 +331,11 @@
     function generateMandiriForm() {
       document.getElementById('dynamic-forms').innerHTML = `
         <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3">
-          <div><label class="block text-sm font-600 text-slate-600 mb-1">NISN</label><input type="text" class="nisn w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="Masukkan NISN Siswa" required></div>
+          <div><label class="block text-sm font-600 text-slate-600 mb-1">NISN</label><input type="text" class="nisn w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="10 Digit NISN" inputmode="numeric" pattern="[0-9]{10}" title="NISN harus 10 digit angka" required></div>
           <div><label class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label><input type="text" class="asal_sekolah_form w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" required></div>
           <div><label class="block text-sm font-600 text-slate-600 mb-1">Nama Lengkap Siswa</label><input type="text" class="nama_siswa w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" required></div>
           <div><label class="block text-sm font-600 text-slate-600 mb-1">Nama Orang Tua/Wali</label><input type="text" class="nama_ortu w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" required></div>
-          <div><label class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label><input type="tel" class="no_wa w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="08xxxxxxxxxx" required></div>
+          <div><label class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label><input type="tel" class="no_wa w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="08xxxxxxxxxx" pattern="08[0-9]{8,11}" title="Gunakan format nomor WhatsApp yang valid (contoh: 081234567890)" required></div>
         </div>`;
     }
 
@@ -328,10 +345,10 @@
         html += `
           <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3">
             <p class="text-sm font-600 text-slate-700 bg-blue-100 p-2 rounded">Peserta ${i + 1}</p>
-            <div><label class="block text-sm font-600 text-slate-600 mb-1">NISN</label><input type="text" class="nisn_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" required></div>
+            <div><label class="block text-sm font-600 text-slate-600 mb-1">NISN</label><input type="text" class="nisn_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" inputmode="numeric" pattern="[0-9]{10}" title="NISN harus 10 digit angka" required></div>
             <div><label class="block text-sm font-600 text-slate-600 mb-1">Nama Lengkap Siswa</label><input type="text" class="nama_siswa_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" required></div>
             <div><label class="block text-sm font-600 text-slate-600 mb-1">Nama Orang Tua/Wali</label><input type="text" class="nama_ortu_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" required></div>
-            <div><label class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label><input type="tel" class="no_wa_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="08xxxxxxxxxx" required></div>
+            <div><label class="block text-sm font-600 text-slate-600 mb-1">Nomor WhatsApp Aktif</label><input type="tel" class="no_wa_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" placeholder="08xxxxxxxxxx" pattern="08[0-9]{8,11}" title="Gunakan format nomor WhatsApp yang valid" required></div>
           </div>`;
       }
       document.getElementById('dynamic-forms').innerHTML = html;
@@ -348,7 +365,9 @@
       let payload = {
          targetDay: targetDay,
          status_verifikasi: currentStatus,
-         waktu: document.getElementById('waktu_daftar').value
+         waktu: document.getElementById('waktu_daftar').value,
+         // Menambahkan timestamp milidetik untuk identifikasi unik di server (anti-bentrok)
+         timestamp: Date.now() 
       };
 
       try {
@@ -427,6 +446,8 @@
 
     function showPage(pageId) {
       ['page-landing', 'page-form', 'page-success'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+      // Hentikan clock jika tidak di halaman form untuk hemat resource
+      if (pageId !== 'page-form' && clockInterval) clearInterval(clockInterval);
       document.getElementById(pageId)?.classList.remove('hidden');
     }
 
