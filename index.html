@@ -8,7 +8,6 @@
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <style>
     * { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -24,15 +23,13 @@
     @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
   </style>
   <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full">
-  <div id="app" class="h-full w-full overflow-auto bg-slate-50">
-   <!-- PAGE 1: Landing -->
-   <div id="page-landing" class="min-h-full flex flex-col items-center justify-center px-4 py-8 relative">
-    <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+  <div id="app" class="h-full w-full overflow-auto bg-slate-50"><!-- PAGE 1: Landing -->
+   <div id="page-landing" class="min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button> <button onclick="showPage('page-cek-nisn')" class="absolute top-4 left-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" title="Cek Status Antrian"> <i data-lucide="search" class="w-5 h-5 text-blue-600"></i> </button> <button onclick="showPage('page-admin-login')" class="absolute bottom-4 right-4 p-3 rounded-xl bg-slate-700 hover:bg-slate-800 shadow-md transition duration-200 border border-slate-600" title="Admin Login"> <i data-lucide="lock" class="w-5 h-5 text-white"></i> </button>
     <div class="w-full max-w-md text-center fade-in">
-     <div class="mb-8 flex justify-center">
-      <img id="logo-img" src="https://cdn-sdotid.adg.id/images/c5c86b0b-3b3f-4177-84c6-b2ada8d3e1e2_716x716.webp.jpeg" alt="Logo Sekolah" class="w-32 h-32 rounded-2xl shadow-lg object-cover" loading="lazy" onerror="this.style.background='#2563eb';">
+     <div class="mb-8 flex justify-center"><img id="logo-img" src="https://cdn-sdotid.adg.id/images/c5c86b0b-3b3f-4177-84c6-b2ada8d3e1e2_716x716.webp.jpeg" alt="Logo Sekolah" class="w-32 h-32 rounded-2xl shadow-lg object-cover" loading="lazy" onerror="this.style.background='#2563eb';">
      </div>
      <h1 id="title-text" class="text-4xl font-800 text-slate-800 mb-2">Sistem Antrian SPMB</h1>
      <p id="school-text" class="text-2xl font-700 text-blue-600 mb-3">SMP Negeri 3 Pemalang</p>
@@ -66,84 +63,162 @@
        </div>
       </div>
      </div>
-     <div id="queue-full-msg" class="hidden mt-4 bg-red-50 border border-red-200 rounded-xl p-3 text-red-600 text-sm font-500">
-      <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Maaf, antrian hari ini sudah penuh. Silakan coba lagi besok pukul 19.00.
+     <div id="queue-full-msg" class="hidden mt-4 bg-red-50 border border-red-200 rounded-xl p-3 text-red-600 text-sm font-500"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Maaf, antrian hari ini sudah penuh. Silakan coba lagi besok pukul 19.00.
      </div>
-     <div id="queue-closed-msg" class="hidden mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-yellow-700 text-sm font-500">
-      <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Antrian dibuka setiap hari pukul 19.00. Silakan datang kembali pada jam tersebut.
+     <div id="queue-closed-msg" class="hidden mt-4 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-yellow-700 text-sm font-500"><i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i> Antrian dibuka setiap hari pukul 19.00. Silakan datang kembali pada jam tersebut.
      </div>
     </div>
-   </div><!-- PAGE 2: Form -->
-   <div id="page-form" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative">
-    <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-form"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
-    <div class="w-full max-w-md slide-up">
-     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
-      <div class="text-center mb-6">
-       <p id="display-queue-number" class="text-6xl font-800 text-blue-600">001</p>
-      </div>
-      <div class="h-px bg-slate-100 mb-6"></div>
-      <h2 class="text-lg font-700 text-slate-800 mb-4">Pilih Status Verifikasi</h2>
-      <form id="form-data" onsubmit="handleSubmitForm(event)" class="space-y-4">
-       <!-- Status Verifikasi -->
-       <div>
-        <label for="status_verifikasi" class="block text-sm font-600 text-slate-600 mb-1">Status Verifikasi</label> <select id="status_verifikasi" onchange="handleStatusChange()" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition"> <option value="">-- Pilih Status --</option> <option value="mandiri">Mandiri</option> <option value="kolektif">Kolektif Sekolah Asal</option> </select>
-       </div><!-- Jumlah Murid (kolektif only) -->
-       <div id="jumlah-section" class="hidden">
-        <label for="jumlah_murid" class="block text-sm font-600 text-slate-600 mb-1">Jumlah Calon Murid</label> <select id="jumlah_murid" onchange="handleJumlahChange()" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition"> <option value="">-- Pilih Jumlah --</option> <option value="1">1 Peserta</option> <option value="2">2 Peserta</option> <option value="3">3 Peserta</option> <option value="4">4 Peserta</option> <option value="5">5 Peserta</option> <option value="6">6 Peserta</option> <option value="7">7 Peserta</option> <option value="8">8 Peserta</option> <option value="9">9 Peserta</option> <option value="10">10 Peserta</option> <option value="11">11 Peserta</option> <option value="12">12 Peserta</option> <option value="13">13 Peserta</option> <option value="14">14 Peserta</option> <option value="15">15 Peserta</option> <option value="16">16 Peserta</option> <option value="17">17 Peserta</option> <option value="18">18 Peserta</option> <option value="19">19 Peserta</option> <option value="20">20 Peserta</option> </select>
-       </div><!-- Asal Sekolah (shared for kolektif) -->
-       <div id="asal-section" class="hidden">
-        <label for="asal_sekolah" class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label> <input type="text" id="asal_sekolah" placeholder="Nama sekolah asal" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
-       </div><!-- Waktu Daftar -->
-       <div>
-        <label for="waktu_daftar" class="block text-sm font-600 text-slate-600 mb-1">Waktu Daftar</label> <input type="text" id="waktu_daftar" readonly class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm">
-       </div><!-- Dynamic Forms -->
-       <div id="forms-container" class="hidden">
-        <div class="bg-slate-50 p-3 rounded-lg mb-3">
-         <p class="text-sm font-600 text-slate-700">Form Data Pendaftaran</p>
-        </div>
-        <div id="dynamic-forms" class="space-y-4"></div>
-       </div><!-- Submit Button --> <button type="submit" id="btn-submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"> <i data-lucide="send" class="w-4 h-4"></i> <span id="btn-submit-text">Konfirmasi &amp; Kirim</span> </button>
-      </form>
+   </div><!-- PAGE 1.5: Cek NISN -->
+   <div id="page-cek-nisn" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-cek"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
+     <div class="flex items-center justify-between mb-6">
+      <h2 class="text-lg font-700 text-slate-800">Cek Status Antrian</h2><button onclick="showPage('page-landing')" class="p-2 hover:bg-slate-100 rounded-lg transition"> <i data-lucide="x" class="w-5 h-5 text-slate-600"></i> </button>
+     </div>
+     <div class="space-y-4">
+      <div><label for="cek-nisn" class="block text-sm font-600 text-slate-600 mb-1">Masukkan NISN</label> <input type="text" id="cek-nisn" placeholder="Nomor Induk Siswa Nasional" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+      </div><button onclick="handleCekNISN()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"> <i data-lucide="search" class="w-4 h-4"></i> Cari Antrian </button>
+     </div>
+     <div id="cek-result" class="hidden mt-6 pt-6 border-t border-slate-200">
+      <div id="cek-result-content"></div><button onclick="resetCekNISN()" class="mt-4 w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-600 rounded-lg transition">Cari Lagi</button>
      </div>
     </div>
-   </div><!-- PAGE 3: Success -->
-   <div id="page-success" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative">
-    <button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-success"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
-    <div class="w-full max-w-md text-center slide-up">
-     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
-      <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-       <i data-lucide="check-circle" class="w-8 h-8 text-emerald-600"></i>
-      </div>
-      <h2 class="text-xl font-700 text-slate-800 mb-2">Pendaftaran Berhasil!</h2>
-      <p class="text-slate-500 text-sm mb-4">Data Anda telah tersimpan</p>
-      <div class="bg-gradient-to-b from-emerald-50 to-blue-50 rounded-2xl p-8 mb-6 flex flex-col items-center">
-       <i data-lucide="check-circle" class="w-24 h-24 text-emerald-500 mb-4"></i>
-       <p id="success-queue-number-large" class="text-6xl font-800 text-blue-600">001</p>
-       <p class="text-slate-600 font-600 mt-2">Nomor Antrian Anda</p>
-      </div>
-      <div id="success-details" class="text-left bg-slate-50 rounded-xl p-4 mb-6 text-sm space-y-1"></div>
-      <p id="success-day-info" class="text-sm font-600 text-blue-600 mb-4">Antrian Untuk Hari: <span id="success-day-name">-</span></p>
-      <div class="bg-blue-900 border-l-4 border-blue-400 rounded-lg p-4 mb-6" id="screenshot-box" style="background-color: #1e3a8a; border-left-color: #60a5fa;">
-       <p class="text-blue-100 font-700 text-sm flex items-start gap-2" style="color: #dbeafe;"><i data-lucide="camera" class="w-5 h-5 flex-shrink-0 mt-0.5"></i> <span>Silakan Screenshot Layar Ini Sebagai Bukti Pendaftaran</span></p>
-      </div><button onclick="resetToLanding()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition text-sm"> Kembali ke Beranda </button>
+   </div>
+  </div><!-- PAGE 3.5: Admin Login -->
+  <div id="page-admin-login" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-admin-login"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+   <div class="w-full max-w-sm slide-up">
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
+     <div class="flex justify-center mb-6"><i data-lucide="lock" class="w-12 h-12 text-slate-400"></i>
      </div>
+     <h2 class="text-2xl font-700 text-slate-800 text-center mb-2">Admin Panel</h2>
+     <p class="text-slate-500 text-sm text-center mb-6">Masukkan password untuk akses</p>
+     <div class="space-y-4">
+      <div><label for="admin-password" class="block text-sm font-600 text-slate-700 mb-2">Password Admin</label> <input type="password" id="admin-password" placeholder="Masukkan password" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" onkeypress="if(event.key==='Enter') verifyAdminPassword()">
+      </div><button onclick="verifyAdminPassword()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition-all duration-200 active:scale-[0.98]"> Masuk Admin </button> <button onclick="showPage('page-landing')" class="w-full py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-600 rounded-xl transition flex items-center justify-center gap-2"> <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali </button>
+     </div>
+    </div>
+   </div>
+  </div><!-- PAGE 4: Admin Dashboard -->
+  <div id="page-admin" class="hidden min-h-full flex flex-col items-center justify-start px-4 py-8 relative"><button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-admin"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+   <div class="w-full max-w-4xl slide-up">
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
+     <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-700 text-slate-800">Admin Dashboard</h2>
+      <div class="space-x-2">
+       <button onclick="toggleTheme()" class="p-2 hover:bg-slate-100 rounded-lg transition" title="Toggle Theme"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button> <button onclick="logoutAdmin()" class="p-2 hover:bg-red-100 rounded-lg transition" title="Logout"> <i data-lucide="log-out" class="w-5 h-5 text-red-600"></i> </button>
+      </div>
+     </div><!-- Statistics -->
+     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+       <p class="text-xs font-600 text-slate-600 uppercase">Total Records</p>
+       <p id="total-records" class="text-2xl font-700 text-blue-600 mt-1">0</p>
+      </div>
+      <div class="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
+       <p class="text-xs font-600 text-slate-600 uppercase">Mandiri</p>
+       <p id="admin-mandiri-count" class="text-2xl font-700 text-emerald-600 mt-1">0</p>
+      </div>
+      <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
+       <p class="text-xs font-600 text-slate-600 uppercase">Kolektif</p>
+       <p id="admin-kolektif-count" class="text-2xl font-700 text-purple-600 mt-1">0</p>
+      </div>
+      <div class="bg-orange-50 rounded-lg p-4 border border-orange-200">
+       <p class="text-xs font-600 text-slate-600 uppercase">Tanggal Unik</p>
+       <p id="admin-dates-count" class="text-2xl font-700 text-orange-600 mt-1">0</p>
+      </div>
+     </div><!-- Filter & Export -->
+     <div class="bg-slate-50 rounded-lg p-4 mb-6">
+      <div class="flex flex-col md:flex-row gap-3 items-center mb-4">
+       <input type="date" id="admin-filter-date" class="px-4 py-2 border border-slate-200 rounded-lg text-sm" onchange="updateAdminDisplay()"> <select id="admin-filter-status" class="px-4 py-2 border border-slate-200 rounded-lg text-sm" onchange="updateAdminDisplay()"> <option value="">Semua Status</option> <option value="mandiri">Mandiri</option> <option value="kolektif">Kolektif</option> </select> <button onclick="downloadAdminCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-600 rounded-lg text-sm transition flex items-center gap-2"> <i data-lucide="download" class="w-4 h-4"></i> Download CSV </button> <button onclick="downloadAdminExcel()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-lg text-sm transition flex items-center gap-2"> <i data-lucide="file" class="w-4 h-4"></i> Download Excel </button> <button onclick="syncToGoogleSheets()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-600 rounded-lg text-sm transition flex items-center gap-2"> <i data-lucide="upload-cloud" class="w-4 h-4"></i> Sync Sheets </button>
+      </div>
+     </div><!-- Data Table -->
+     <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+       <thead class="bg-slate-100 border-b border-slate-300">
+        <tr>
+         <th class="px-4 py-2 text-left font-600 text-slate-700">No.</th>
+         <th class="px-4 py-2 text-left font-600 text-slate-700">Antrian</th>
+         <th class="px-4 py-2 text-left font-600 text-slate-700">NISN</th>
+         <th class="px-4 py-2 text-left font-600 text-slate-700">Nama Siswa</th>
+         <th class="px-4 py-2 text-left font-600 text-slate-700">Asal Sekolah</th>
+         <th class="px-4 py-2 text-left font-600 text-slate-700">No. WA</th>
+         <th class="px-4 py-2 text-left font-600 text-slate-700">Status</th>
+         <th class="px-4 py-2 text-left font-600 text-slate-700">Tanggal</th>
+         <th class="px-4 py-2 text-center font-600 text-slate-700">Aksi</th>
+        </tr>
+       </thead>
+       <tbody id="admin-table-body">
+       </tbody>
+      </table>
+     </div><!-- Pagination -->
+     <div class="mt-4 flex items-center justify-between">
+      <p class="text-sm text-slate-600">Menampilkan <span id="admin-page-info">0</span> records</p>
+      <div class="space-x-2">
+       <button onclick="adminPreviousPage()" class="px-3 py-1 bg-slate-200 hover:bg-slate-300 rounded text-sm"> Sebelumnya </button> <button onclick="adminNextPage()" class="px-3 py-1 bg-slate-200 hover:bg-slate-300 rounded text-sm"> Selanjutnya </button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- PAGE 2: Form -->
+  <div id="page-form" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-form"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+   <div class="w-full max-w-md slide-up">
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
+     <div class="text-center mb-6">
+      <p id="display-queue-number" class="text-6xl font-800 text-blue-600">001</p>
+     </div>
+     <div class="h-px bg-slate-100 mb-6"></div>
+     <h2 class="text-lg font-700 text-slate-800 mb-4">Pilih Status Verifikasi</h2>
+     <form id="form-data" onsubmit="handleSubmitForm(event)" class="space-y-4"><!-- Status Verifikasi -->
+      <div><label for="status_verifikasi" class="block text-sm font-600 text-slate-600 mb-1">Status Verifikasi</label> <select id="status_verifikasi" onchange="handleStatusChange()" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition"> <option value="">-- Pilih Status --</option> <option value="mandiri">Mandiri</option> <option value="kolektif">Kolektif Sekolah Asal</option> </select>
+      </div><!-- Jumlah Murid (kolektif only) -->
+      <div id="jumlah-section" class="hidden"><label for="jumlah_murid" class="block text-sm font-600 text-slate-600 mb-1">Jumlah Calon Murid</label> <select id="jumlah_murid" onchange="handleJumlahChange()" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition"> <option value="">-- Pilih Jumlah --</option> <option value="1">1 Peserta</option> <option value="2">2 Peserta</option> <option value="3">3 Peserta</option> <option value="4">4 Peserta</option> <option value="5">5 Peserta</option> <option value="6">6 Peserta</option> <option value="7">7 Peserta</option> <option value="8">8 Peserta</option> <option value="9">9 Peserta</option> <option value="10">10 Peserta</option> <option value="11">11 Peserta</option> <option value="12">12 Peserta</option> <option value="13">13 Peserta</option> <option value="14">14 Peserta</option> <option value="15">15 Peserta</option> <option value="16">16 Peserta</option> <option value="17">17 Peserta</option> <option value="18">18 Peserta</option> <option value="19">19 Peserta</option> <option value="20">20 Peserta</option> </select>
+      </div><!-- Asal Sekolah (shared for kolektif) -->
+      <div id="asal-section" class="hidden"><label for="asal_sekolah" class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label> <input type="text" id="asal_sekolah" placeholder="Nama sekolah asal" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition">
+      </div><!-- Waktu Daftar -->
+      <div><label for="waktu_daftar" class="block text-sm font-600 text-slate-600 mb-1">Waktu Daftar</label> <input type="text" id="waktu_daftar" readonly class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm">
+      </div><!-- Dynamic Forms -->
+      <div id="forms-container" class="hidden">
+       <div class="bg-slate-50 p-3 rounded-lg mb-3">
+        <p class="text-sm font-600 text-slate-700">Form Data Pendaftaran</p>
+       </div>
+       <div id="dynamic-forms" class="space-y-4"></div>
+      </div><!-- Submit Button --> <button type="submit" id="btn-submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"> <i data-lucide="send" class="w-4 h-4"></i> <span id="btn-submit-text">Konfirmasi &amp; Kirim</span> </button> <button type="button" onclick="showPage('page-landing')" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-600 rounded-xl transition"> Kembali ke Beranda </button>
+     </form>
+    </div>
+   </div>
+  </div><!-- PAGE 3: Success -->
+  <div id="page-success" class="hidden min-h-full flex flex-col items-center justify-center px-4 py-8 relative"><button onclick="toggleTheme()" class="absolute top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200" id="theme-toggle-success"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+   <div class="w-full max-w-md text-center slide-up">
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
+     <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="check-circle" class="w-8 h-8 text-emerald-600"></i>
+     </div>
+     <h2 class="text-xl font-700 text-slate-800 mb-2">Pendaftaran Berhasil!</h2>
+     <p class="text-slate-500 text-sm mb-4">Data Anda telah tersimpan</p>
+     <div class="bg-gradient-to-b from-emerald-50 to-blue-50 rounded-2xl p-8 mb-6 flex flex-col items-center"><i data-lucide="check-circle" class="w-24 h-24 text-emerald-500 mb-4"></i>
+      <p id="success-queue-number-large" class="text-6xl font-800 text-blue-600">001</p>
+      <p class="text-slate-600 font-600 mt-2">Nomor Antrian Anda</p>
+     </div>
+     <div id="success-details" class="text-left bg-slate-50 rounded-xl p-4 mb-6 text-sm space-y-1"></div>
+     <p id="success-day-info" class="text-sm font-600 text-blue-600 mb-4">Antrian Untuk Hari: <span id="success-day-name">-</span></p>
+     <div class="bg-blue-900 border-l-4 border-blue-400 rounded-lg p-4 mb-6" id="screenshot-box" style="background-color: #1e3a8a; border-left-color: #60a5fa;">
+      <p class="text-blue-100 font-700 text-sm flex items-start gap-2" style="color: #dbeafe;"><i data-lucide="camera" class="w-5 h-5 flex-shrink-0 mt-0.5"></i> <span>Silakan Screenshot Layar Ini Sebagai Bukti Pendaftaran</span></p>
+     </div><button onclick="resetToLanding()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition text-sm"> Kembali ke Beranda </button>
     </div>
    </div>
   </div>
   <script>
-    const DAILY_LIMIT_MANDIRI = 300;
-    const DAILY_LIMIT_KOLEKTIF = 10;
-    const QUEUE_OPEN_HOUR = 9;
-    const QUEUE_RESET_HOUR = 8;
-    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzXPZyWEq7nsTiPCu8OANV071YRbp4qqZ2iHz3ELbJhdA8647HAVPT9D8571WGH1xBQ5A/exec';
+    const DAILY_LIMIT_MANDIRI = 99999; // Unlimited untuk ujicoba
+    const DAILY_LIMIT_KOLEKTIF = 99999; // Unlimited untuk ujicoba
+    const QUEUE_OPEN_HOUR = 0; // Buka 24 jam untuk ujicoba
+    const QUEUE_RESET_HOUR = 0;
 
     let allRecords = [];
     let currentQueueNumber = 0;
     let todayStr = new Date().toISOString().split('T')[0];
     let nextDayStr = getNextDayStr();
-    let sdkReady = false;
     let currentStatus = '';
     let jumlahMurid = 1;
+    let adminCurrentPage = 0;
+    let adminPageSize = 10;
+    let adminFilteredRecords = [];
 
     function getNextDayStr() {
       const tomorrow = new Date();
@@ -200,6 +275,25 @@
       }
     };
 
+    // Load data from localStorage on startup
+    function loadDataFromLocalStorage() {
+      const stored = localStorage.getItem('antrian_data');
+      if (stored) {
+        try {
+          allRecords = JSON.parse(stored);
+        } catch (e) {
+          console.error('Error parsing stored data:', e);
+          allRecords = [];
+        }
+      }
+      updateQueueDisplay();
+    }
+
+    // Save data to localStorage
+    function saveDataToLocalStorage() {
+      localStorage.setItem('antrian_data', JSON.stringify(allRecords));
+    }
+
     window.elementSdk.init({
       defaultConfig,
       onConfigChange: async (config) => {
@@ -213,7 +307,6 @@
         document.getElementById('app').style.backgroundColor = theme.background;
         document.getElementById('app').style.color = theme.text;
 
-        // Update all text elements for dark mode visibility
         document.querySelectorAll('p, span, h1, h2, h3, label, input::placeholder').forEach(el => {
           if (el.className.includes('text-slate') || el.className.includes('text-blue') || el.className.includes('opacity')) {
             el.style.color = theme.text;
@@ -240,10 +333,6 @@
           el.style.borderColor = theme.border;
         });
 
-        document.querySelectorAll('input::placeholder').forEach(el => {
-          el.style.color = theme.secondary;
-        });
-
         document.querySelectorAll('label').forEach(el => {
           el.style.color = theme.text;
         });
@@ -266,33 +355,28 @@
           el.style.color = theme.text;
         });
 
-        // PENTING: Update warna text di kotak antrian setelah setiap theme change
+        // Update warna text di kotak antrian
         const mandiriUsedBox = document.getElementById('mandiri-used').parentElement;
         const mandiriRemainingBox = document.getElementById('mandiri-remaining').parentElement;
         const kolektifUsedBox = document.getElementById('kolektif-used').parentElement;
         const kolektifRemainingBox = document.getElementById('kolektif-remaining').parentElement;
 
-        // Mandiri Terpakai - warna merah tetap
         mandiriUsedBox.querySelectorAll('p').forEach(p => {
           p.style.color = '#991b1b';
         });
 
-        // Mandiri Sisa - warna hijau tetap
         mandiriRemainingBox.querySelectorAll('p').forEach(p => {
           p.style.color = '#166534';
         });
 
-        // Kolektif Terpakai - warna merah tetap
         kolektifUsedBox.querySelectorAll('p').forEach(p => {
           p.style.color = '#991b1b';
         });
 
-        // Kolektif Sisa - warna hijau tetap
         kolektifRemainingBox.querySelectorAll('p').forEach(p => {
           p.style.color = '#166534';
         });
 
-        // Update message boxes
         document.querySelectorAll('[id*="msg"]').forEach(el => {
           if (el.id.includes('full')) {
             el.style.backgroundColor = themeMode === 'dark' ? '#7f1d1d' : '#fef2f2';
@@ -318,6 +402,18 @@
         if (backBtn) {
           backBtn.style.backgroundColor = theme.primary;
         }
+
+        // Fix admin dashboard dark mode
+        const adminCard = document.getElementById('admin-dashboard-card');
+        if (adminCard) {
+          adminCard.style.backgroundColor = theme.surface;
+          adminCard.style.color = theme.text;
+          adminCard.querySelectorAll('*').forEach(el => {
+            if (el.tagName !== 'BUTTON' && el.tagName !== 'INPUT' && el.tagName !== 'SELECT') {
+              el.style.color = theme.text;
+            }
+          });
+        }
       },
       mapToCapabilities: (config) => ({
         recolorables: [],
@@ -332,34 +428,23 @@
       ])
     });
 
-    const dataHandler = {
-      onDataChanged(data) {
-        allRecords = data;
-        updateQueueDisplay();
-      }
-    };
-
     function updateQueueDisplay() {
       const targetDay = isQueueOpen() ? nextDayStr : todayStr;
       
-      // Mandiri
       const mandiriRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'mandiri');
       const mandiriUsed = mandiriRecords.length;
       const mandiriRemaining = Math.max(0, DAILY_LIMIT_MANDIRI - mandiriUsed);
       
-      // Kolektif - hitung berdasarkan nomor antrian UNIK, bukan jumlah record
       const kolektifRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'kolektif');
       const uniqueKolektifNumbers = new Set(kolektifRecords.map(r => r.queue_number));
       const kolektifUsed = uniqueKolektifNumbers.size;
       const kolektifRemaining = Math.max(0, DAILY_LIMIT_KOLEKTIF - kolektifUsed);
 
-      // Update Mandiri box
       document.getElementById('mandiri-used').textContent = mandiriUsed;
       document.getElementById('mandiri-remaining').textContent = mandiriRemaining;
       const mandiriUsedBox = document.getElementById('mandiri-used').parentElement;
       const mandiriRemainingBox = document.getElementById('mandiri-remaining').parentElement;
       
-      // Fixed colors - Terpakai warna merah soft, Sisa warna hijau soft
       mandiriUsedBox.style.backgroundColor = '#fee2e2';
       mandiriUsedBox.style.color = '#991b1b';
       mandiriUsedBox.style.border = '2px solid #fecaca';
@@ -367,7 +452,6 @@
       mandiriRemainingBox.style.color = '#166534';
       mandiriRemainingBox.style.border = '2px solid #bbf7d0';
 
-      // Update all text elements in mandiri boxes
       mandiriUsedBox.querySelectorAll('p').forEach(p => {
         p.style.color = '#991b1b';
       });
@@ -375,13 +459,11 @@
         p.style.color = '#166534';
       });
 
-      // Update Kolektif box
       document.getElementById('kolektif-used').textContent = kolektifUsed;
       document.getElementById('kolektif-remaining').textContent = kolektifRemaining;
       const kolektifUsedBox = document.getElementById('kolektif-used').parentElement;
       const kolektifRemainingBox = document.getElementById('kolektif-remaining').parentElement;
       
-      // Fixed colors - Terpakai warna merah soft, Sisa warna hijau soft
       kolektifUsedBox.style.backgroundColor = '#fee2e2';
       kolektifUsedBox.style.color = '#991b1b';
       kolektifUsedBox.style.border = '2px solid #fecaca';
@@ -389,7 +471,6 @@
       kolektifRemainingBox.style.color = '#166534';
       kolektifRemainingBox.style.border = '2px solid #bbf7d0';
 
-      // Update all text elements in kolektif boxes
       kolektifUsedBox.querySelectorAll('p').forEach(p => {
         p.style.color = '#991b1b';
       });
@@ -402,8 +483,6 @@
         document.getElementById('next-day-name').textContent = dayName;
       }
 
-      // Check queue full/closed status
-      const totalUsed = mandiriUsed + kolektifUsed;
       if (mandiriRemaining === 0 && kolektifRemaining === 0) {
         document.getElementById('btn-ambil').disabled = true;
         document.getElementById('btn-ambil').classList.add('opacity-50');
@@ -422,40 +501,14 @@
       }
     }
 
-    (async () => {
-      const initResult = await window.dataSdk.init(dataHandler);
-      if (initResult.isOk) {
-        sdkReady = true;
-        console.log('Data SDK initialized');
-        startPollingQueueData();
-      } else {
-        console.warn('Data SDK init warning');
-      }
-    })();
-
-    let pollingInterval = null;
-
-    function startPollingQueueData() {
-      if (pollingInterval) clearInterval(pollingInterval);
-      pollingInterval = setInterval(() => {
-        if (window.dataSdk) {
-          window.dataSdk.init(dataHandler).catch(err => {
-            console.warn('Polling error');
-          });
-        }
-      }, 2000);
-    }
-
     function getTodayCount() {
       const targetDay = isQueueOpen() ? nextDayStr : todayStr;
       
       if (currentStatus === 'kolektif') {
-        // Untuk kolektif, hitung berdasarkan nomor antrian unik (bukan jumlah record anak)
         const kolektifRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'kolektif');
         const uniqueQueueNumbers = new Set(kolektifRecords.map(r => r.queue_number));
         return uniqueQueueNumbers.size;
       } else {
-        // Untuk mandiri, hitung berdasarkan jumlah record (1 record = 1 antrian)
         const mandiriRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === currentStatus);
         return mandiriRecords.length;
       }
@@ -533,7 +586,6 @@
       const used = getTodayCount();
       const remaining = DAILY_LIMIT_KOLEKTIF - used;
 
-      // Validasi: hanya cek apakah masih ada slot nomor antrian, bukan jumlah peserta
       if (remaining <= 0) {
         showInlineError(`Maaf, antrian Kolektif hari ini sudah penuh (10 nomor antrian sudah terpakai).`);
         document.getElementById('jumlah_murid').value = '';
@@ -552,6 +604,10 @@
       const container = document.getElementById('dynamic-forms');
       container.innerHTML = `
         <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3">
+          <div>
+            <label class="block text-sm font-600 text-slate-600 mb-1">NISN (Nomor Induk Siswa Nasional)</label>
+            <input type="text" class="nisn w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="Contoh: 1234567890" required>
+          </div>
           <div>
             <label class="block text-sm font-600 text-slate-600 mb-1">Asal SD/MI</label>
             <input type="text" class="asal_sekolah_form w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="Nama sekolah asal" required>
@@ -581,6 +637,10 @@
         form.className = 'bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3';
         form.innerHTML = `
           <p class="text-sm font-600 text-slate-700 bg-blue-100 p-2 rounded">Peserta ${i + 1}</p>
+          <div>
+            <label class="block text-sm font-600 text-slate-600 mb-1">NISN (Nomor Induk Siswa Nasional)</label>
+            <input type="text" class="nisn_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="Contoh: 1234567890" required>
+          </div>
           <div>
             <label class="block text-sm font-600 text-slate-600 mb-1">Nama Lengkap Siswa</label>
             <input type="text" class="nama_siswa_${i} w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition" placeholder="Masukkan nama lengkap" required>
@@ -613,20 +673,21 @@
 
       try {
         if (currentStatus === 'mandiri') {
+          const nisn = document.querySelector('.nisn').value.trim();
           const nama = document.querySelector('.nama_siswa').value.trim();
           const ortu = document.querySelector('.nama_ortu').value.trim();
           const wa = document.querySelector('.no_wa').value.trim();
           const asal = document.querySelector('.asal_sekolah_form').value.trim();
 
-          if (!nama || !asal || !ortu || !wa) {
+          if (!nisn || !nama || !asal || !ortu || !wa) {
             btn.disabled = false;
             btnText.textContent = 'Konfirmasi & Kirim';
             showInlineError('Mohon isi semua data dengan benar.');
             return;
           }
 
-          await submitSingleRecord(formattedNum, nama, asal, ortu, wa, waktu, targetDay, currentStatus);
-          displaySuccessMandiri(formattedNum, nama, asal, ortu, wa, waktu, targetDay);
+          await submitSingleRecord(formattedNum, nisn, nama, asal, ortu, wa, waktu, targetDay, currentStatus);
+          displaySuccessMandiri(formattedNum, nisn, nama, asal, ortu, wa, waktu, targetDay);
 
         } else if (currentStatus === 'kolektif') {
           if (!asal) {
@@ -636,21 +697,20 @@
             return;
           }
 
-          // Submit dengan nomor antrian yang SAMA untuk semua peserta
           for (let i = 0; i < jumlahMurid; i++) {
+            const nisn = document.querySelector(`.nisn_${i}`).value.trim();
             const nama = document.querySelector(`.nama_siswa_${i}`).value.trim();
             const ortu = document.querySelector(`.nama_ortu_${i}`).value.trim();
             const wa = document.querySelector(`.no_wa_${i}`).value.trim();
 
-            if (!nama || !ortu || !wa) {
+            if (!nisn || !nama || !ortu || !wa) {
               showInlineError(`Mohon isi semua data untuk peserta ${i + 1}.`);
               btn.disabled = false;
               btnText.textContent = 'Konfirmasi & Kirim';
               return;
             }
 
-            // Semua peserta dalam grup kolektif = nomor antrian SAMA
-            await submitSingleRecord(formattedNum, nama, asal, ortu, wa, waktu, targetDay, currentStatus);
+            await submitSingleRecord(formattedNum, nisn, nama, asal, ortu, wa, waktu, targetDay, currentStatus);
           }
 
           displaySuccessKolektif(formattedNum, asal, targetDay, waktu);
@@ -669,11 +729,12 @@
       }
     }
 
-    function displaySuccessMandiri(queueNum, nama, asal, ortu, wa, waktu, targetDay) {
+    function displaySuccessMandiri(queueNum, nisn, nama, asal, ortu, wa, waktu, targetDay) {
       document.getElementById('success-queue-number-large').textContent = queueNum;
       const dayName = getDayName(targetDay);
       document.getElementById('success-day-name').textContent = dayName;
       document.getElementById('success-details').innerHTML = `
+        <p><span class="font-600">NISN:</span> ${escapeHtml(nisn)}</p>
         <p><span class="font-600">Nama:</span> ${escapeHtml(nama)}</p>
         <p><span class="font-600">Asal Sekolah:</span> ${escapeHtml(asal)}</p>
         <p><span class="font-600">Orang Tua:</span> ${escapeHtml(ortu)}</p>
@@ -695,58 +756,91 @@
       `;
     }
 
-    async function submitSingleRecord(queueNum, nama, asal, ortu, wa, waktu, targetDay, status) {
-      if (sdkReady && window.dataSdk) {
-        await window.dataSdk.create({
-          queue_number: queueNum,
-          nama_siswa: nama,
-          asal_sekolah: asal,
-          nama_ortu: ortu,
-          no_wa: wa,
-          waktu_daftar: waktu,
-          tanggal: targetDay,
-          status_verifikasi: status
-        });
-      }
-
-      const payload = {
+    function submitSingleRecord(queueNum, nisn, nama, asal, ortu, wa, waktu, targetDay, status) {
+      const record = {
         queue_number: queueNum,
+        nisn: nisn,
         nama_siswa: nama,
         asal_sekolah: asal,
         nama_ortu: ortu,
         no_wa: wa,
         waktu_daftar: waktu,
         tanggal: targetDay,
-        status_verifikasi: status
+        status_verifikasi: status,
+        id: Date.now() + Math.random()
       };
 
-      fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(err => console.error('Webhook error'));
+      allRecords.push(record);
+      saveDataToLocalStorage();
+      updateQueueDisplay();
     }
 
     function getNextAvailableQueueNumber(status) {
       const targetDay = isQueueOpen() ? nextDayStr : todayStr;
       
       if (status === 'kolektif') {
-        // Cari nomor antrian unik untuk kolektif
         const kolektifRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'kolektif');
         const usedNumbers = new Set(kolektifRecords.map(r => parseInt(r.queue_number)));
         
-        // Cari nomor pertama yang tersedia mulai dari 1
         let nextNum = 1;
         while (usedNumbers.has(nextNum)) {
           nextNum++;
         }
         return nextNum;
       } else {
-        // Untuk mandiri, cari nomor terbesar + 1
         const mandiriRecords = allRecords.filter(r => r.tanggal === targetDay && r.status_verifikasi === 'mandiri');
         const usedNumbers = mandiriRecords.map(r => parseInt(r.queue_number));
         return usedNumbers.length > 0 ? Math.max(...usedNumbers) + 1 : 1;
       }
+    }
+
+    function handleCekNISN() {
+      const nisn = document.getElementById('cek-nisn').value.trim();
+      
+      if (!nisn) {
+        showInlineError('Mohon masukkan NISN terlebih dahulu.');
+        return;
+      }
+
+      const found = allRecords.filter(r => r.nisn === nisn);
+
+      if (found.length === 0) {
+        document.getElementById('cek-result').classList.remove('hidden');
+        document.getElementById('cek-result-content').innerHTML = `
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800">
+            <p class="font-600">Data tidak ditemukan</p>
+            <p class="text-sm mt-1">NISN <strong>${escapeHtml(nisn)}</strong> belum terdaftar dalam sistem antrian.</p>
+          </div>
+        `;
+        return;
+      }
+
+      document.getElementById('cek-result').classList.remove('hidden');
+      let resultHTML = '<div class="space-y-3">';
+
+      found.forEach((record, idx) => {
+        const dayName = getDayName(record.tanggal);
+        resultHTML += `
+          <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+            <p class="font-700 text-emerald-900 mb-2">Antrian ${idx + 1}</p>
+            <p><span class="font-600">NISN:</span> ${escapeHtml(record.nisn)}</p>
+            <p><span class="font-600">Nama:</span> ${escapeHtml(record.nama_siswa)}</p>
+            <p><span class="font-600">Nomor Antrian:</span> <strong class="text-xl text-blue-600">${escapeHtml(record.queue_number)}</strong></p>
+            <p><span class="font-600">Tanggal:</span> ${dayName}</p>
+            <p><span class="font-600">Waktu Daftar:</span> ${escapeHtml(record.waktu_daftar)}</p>
+            <p><span class="font-600">Status:</span> <span class="uppercase text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">${escapeHtml(record.status_verifikasi)}</span></p>
+          </div>
+        `;
+      });
+
+      resultHTML += '</div>';
+      document.getElementById('cek-result-content').innerHTML = resultHTML;
+    }
+
+    function resetCekNISN() {
+      document.getElementById('cek-nisn').value = '';
+      document.getElementById('cek-result').classList.add('hidden');
+      document.getElementById('cek-result-content').innerHTML = '';
     }
 
     function escapeHtml(text) {
@@ -761,7 +855,8 @@
         el = document.createElement('div');
         el.id = 'inline-error';
         el.className = 'bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl p-3 mt-3';
-        document.getElementById('form-data').appendChild(el);
+        const form = document.getElementById('form-data');
+        if (form) form.appendChild(el);
       }
       el.textContent = msg;
       el.classList.remove('hidden');
@@ -774,7 +869,8 @@
         el = document.createElement('div');
         el.id = 'inline-warning';
         el.className = 'bg-yellow-50 border border-yellow-200 text-yellow-700 text-sm rounded-xl p-3 mt-4';
-        document.querySelector('.w-full.max-w-md').appendChild(el);
+        const container = document.querySelector('.w-full.max-w-md');
+        if (container) container.appendChild(el);
       }
       el.textContent = msg;
       el.classList.remove('hidden');
@@ -782,14 +878,189 @@
     }
 
     function showPage(pageId) {
-      ['page-landing', 'page-form', 'page-success'].forEach(id => {
+      ['page-landing', 'page-form', 'page-success', 'page-cek-nisn', 'page-admin', 'page-admin-login'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
       document.getElementById(pageId).classList.remove('hidden');
+      if (pageId === 'page-admin') {
+        checkAdminAuth();
+      }
     }
 
     function resetToLanding() {
       showPage('page-landing');
+    }
+
+    // Admin Dashboard Functions
+    function updateAdminDisplay() {
+      adminCurrentPage = 0;
+      const filterDate = document.getElementById('admin-filter-date').value;
+      const filterStatus = document.getElementById('admin-filter-status').value;
+
+      adminFilteredRecords = allRecords.filter(record => {
+        let match = true;
+        if (filterDate && record.tanggal !== filterDate) match = false;
+        if (filterStatus && record.status_verifikasi !== filterStatus) match = false;
+        return match;
+      });
+
+      // Update statistics
+      document.getElementById('total-records').textContent = allRecords.length;
+      document.getElementById('admin-mandiri-count').textContent = allRecords.filter(r => r.status_verifikasi === 'mandiri').length;
+      document.getElementById('admin-kolektif-count').textContent = allRecords.filter(r => r.status_verifikasi === 'kolektif').length;
+      
+      const uniqueDates = new Set(allRecords.map(r => r.tanggal));
+      document.getElementById('admin-dates-count').textContent = uniqueDates.size;
+
+      renderAdminTable();
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('admin-table-body');
+      tbody.innerHTML = '';
+
+      const start = adminCurrentPage * adminPageSize;
+      const end = start + adminPageSize;
+      const pageRecords = adminFilteredRecords.slice(start, end);
+
+      pageRecords.forEach((record, idx) => {
+        const row = document.createElement('tr');
+        row.className = idx % 2 === 0 ? 'bg-white' : 'bg-slate-50';
+        row.innerHTML = `
+          <td class="px-4 py-2 border-b border-slate-200">${start + idx + 1}</td>
+          <td class="px-4 py-2 border-b border-slate-200 font-700 text-blue-600">${escapeHtml(record.queue_number)}</td>
+          <td class="px-4 py-2 border-b border-slate-200">${escapeHtml(record.nisn)}</td>
+          <td class="px-4 py-2 border-b border-slate-200">${escapeHtml(record.nama_siswa)}</td>
+          <td class="px-4 py-2 border-b border-slate-200">${escapeHtml(record.asal_sekolah)}</td>
+          <td class="px-4 py-2 border-b border-slate-200">${escapeHtml(record.no_wa)}</td>
+          <td class="px-4 py-2 border-b border-slate-200"><span class="text-xs uppercase px-2 py-1 rounded-full ${record.status_verifikasi === 'mandiri' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'}">${escapeHtml(record.status_verifikasi)}</span></td>
+          <td class="px-4 py-2 border-b border-slate-200 text-xs">${record.tanggal}</td>
+          <td class="px-4 py-2 border-b border-slate-200 text-center">
+            <button onclick="deleteAdminRecord('${record.id}')" class="px-2 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded text-xs transition">
+              <i data-lucide="trash-2" class="w-3 h-3 inline"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('admin-page-info').textContent = `${start + 1} - ${Math.min(end, adminFilteredRecords.length)} dari ${adminFilteredRecords.length}`;
+      lucide.createIcons();
+    }
+
+    function adminNextPage() {
+      const maxPage = Math.ceil(adminFilteredRecords.length / adminPageSize);
+      if (adminCurrentPage < maxPage - 1) {
+        adminCurrentPage++;
+        renderAdminTable();
+      }
+    }
+
+    function adminPreviousPage() {
+      if (adminCurrentPage > 0) {
+        adminCurrentPage--;
+        renderAdminTable();
+      }
+    }
+
+    function deleteAdminRecord(recordId) {
+      const index = allRecords.findIndex(r => r.id === recordId);
+      if (index > -1) {
+        allRecords.splice(index, 1);
+        saveDataToLocalStorage();
+        updateAdminDisplay();
+      }
+    }
+
+    function downloadAdminCSV() {
+      let csv = 'No,Nomor Antrian,NISN,Nama Siswa,Asal Sekolah,No. WA,Orang Tua,Status,Tanggal,Waktu\n';
+      adminFilteredRecords.forEach((record, idx) => {
+        csv += `${idx + 1},"${record.queue_number}","${record.nisn}","${record.nama_siswa}","${record.asal_sekolah}","${record.no_wa}","${record.nama_ortu}","${record.status_verifikasi}","${record.tanggal}","${record.waktu_daftar}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `antrian_${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
+    }
+
+    function downloadAdminExcel() {
+      let tsv = 'No\tNomor Antrian\tNISN\tNama Siswa\tAsal Sekolah\tNo. WA\tOrang Tua\tStatus\tTanggal\tWaktu\n';
+      adminFilteredRecords.forEach((record, idx) => {
+        tsv += `${idx + 1}\t${record.queue_number}\t${record.nisn}\t${record.nama_siswa}\t${record.asal_sekolah}\t${record.no_wa}\t${record.nama_ortu}\t${record.status_verifikasi}\t${record.tanggal}\t${record.waktu_daftar}\n`;
+      });
+
+      const blob = new Blob([tsv], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `antrian_${new Date().toISOString().split('T')[0]}.xls`;
+      link.click();
+    }
+
+    async function syncToGoogleSheets() {
+      const webhookUrl = window.elementSdk?.config?.webhook_url;
+      if (!webhookUrl) {
+        showInlineError('Webhook URL belum dikonfigurasi di edit panel.');
+        return;
+      }
+
+      const btn = event.target;
+      btn.disabled = true;
+      const originalHTML = btn.innerHTML;
+      btn.textContent = 'Syncing...';
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            action: 'sync',
+            data: adminFilteredRecords,
+            timestamp: new Date().toISOString()
+          })
+        });
+
+        if (response.ok) {
+          showInlineWarning('Data berhasil disync ke Google Sheets!');
+        } else {
+          showInlineError('Gagal sync ke Google Sheets. Cek webhook URL.');
+        }
+      } catch (error) {
+        showInlineError('Error sync: ' + error.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+        lucide.createIcons();
+      }
+    }
+
+    function verifyAdminPassword() {
+      const input = document.getElementById('admin-password').value;
+      const correctPassword = window.elementSdk?.config?.admin_password || '@Vieqy126892';
+
+      if (input === correctPassword) {
+        sessionStorage.setItem('admin_authenticated', 'true');
+        document.getElementById('admin-password').value = '';
+        showPage('page-admin');
+      } else {
+        showInlineError('Password salah. Coba lagi.');
+        document.getElementById('admin-password').value = '';
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('admin_authenticated');
+      showPage('page-landing');
+    }
+
+    function checkAdminAuth() {
+      const isAuth = sessionStorage.getItem('admin_authenticated') === 'true';
+      if (!isAuth) {
+        showPage('page-admin-login');
+      } else {
+        updateAdminDisplay();
+      }
     }
 
     function toggleTheme() {
@@ -805,7 +1076,7 @@
     }
 
     function updateThemeIcon(themeMode) {
-      const toggleButtons = document.querySelectorAll('#theme-toggle, #theme-toggle-form, #theme-toggle-success');
+      const toggleButtons = document.querySelectorAll('#theme-toggle, #theme-toggle-form, #theme-toggle-success, #theme-toggle-cek');
       toggleButtons.forEach(btn => {
         const icon = btn.querySelector('[data-lucide]');
         if (icon) {
@@ -818,7 +1089,20 @@
       lucide.createIcons();
     }
 
-    lucide.createIcons();
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDataFromLocalStorage();
+      lucide.createIcons();
+    });
+
+    // Fallback if DOMContentLoaded already fired
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        loadDataFromLocalStorage();
+      });
+    } else {
+      loadDataFromLocalStorage();
+    }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0c07de972e93ef7',t:'MTc4MTUxNTE1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0c5b830f58840b9',t:'MTc4MTU2OTk2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
