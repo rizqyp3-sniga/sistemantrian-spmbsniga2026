@@ -72,7 +72,11 @@
   <div id="app" class="h-full w-full landing-bg flex flex-col">
    
    <div id="page-landing" class="w-full h-full fade-in flex flex-col">
-    <div class="flex justify-end items-center px-6 py-4 flex-shrink-0 relative z-10">
+    <div class="flex justify-between items-center px-6 py-4 flex-shrink-0 relative z-10">
+        <div class="flex gap-4 items-center">
+            <button onclick="showPage('page-login')" class="text-xs font-800 uppercase tracking-widest landing-subtitle hover:text-blue-400 transition-colors duration-200">ADMIN</button>
+            <button id="search-nav-button" onclick="showPage('page-search')" class="p-3 rounded-xl landing-button-bg hover:landing-button-hover backdrop-blur-md shadow-lg transition duration-200 landing-button-border"> <i data-lucide="search" class="w-5 h-5 landing-icon-color"></i> </button>
+        </div>
         <button onclick="toggleTheme()" class="p-3 rounded-xl landing-button-bg hover:landing-button-hover backdrop-blur-md shadow-lg transition duration-200 landing-button-border"> <i data-lucide="sun" class="w-5 h-5 landing-icon-color"></i> </button>
     </div>
     <div class="flex-1 flex flex-col items-center justify-center w-full">
@@ -152,7 +156,7 @@
    </div>
 
    <div id="page-success" class="hidden w-full h-full flex items-center justify-center p-2 sm:p-3">
-    <button onclick="toggleTheme()" class="fixed top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200 z-20"> <i data-lucide="sun" class="w-5 h-5 text-amber-500"></i> </button>
+    <button onclick="toggleTheme()" class="fixed top-4 right-4 p-3 rounded-xl bg-white hover:bg-slate-100 shadow-md transition duration-200 border border-slate-200 z-20"> <i data-lucide="sun" class="w-5 h-5 text-amber-500 landing-icon-color"></i> </button>
     <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-3 sm:p-4 w-full max-w-xs text-center">
      <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2">
       <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i>
@@ -171,6 +175,109 @@
      </div><button onclick="resetToLanding()" class="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-lg transition text-xs"> Kembali ke Beranda </button>
     </div>
    </div>
+
+   <!-- Search Page (Public) -->
+   <div id="page-search" class="hidden w-full h-full slide-up flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-4 sm:p-6 space-y-4 w-full max-w-md max-h-full overflow-y-auto">
+     <div class="text-center">
+      <i data-lucide="search" class="w-12 h-12 text-blue-600 mx-auto mb-2"></i>
+      <h2 class="text-xl font-700 text-slate-800">Cek Status Antrian</h2>
+      <p class="text-xs text-slate-500">Masukkan NISN untuk melihat nomor antrian Anda</p>
+     </div>
+     <div class="h-px bg-slate-100"></div>
+     <div class="space-y-3">
+      <input type="text" id="public-nisn-search" placeholder="Masukkan 10 Digit NISN" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none" inputmode="numeric">
+      <button onclick="searchRegistrationsByNisn('public-nisn-search', 'public-search-results')" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-600 rounded-xl transition flex items-center justify-center gap-2"> <i data-lucide="search" class="w-4 h-4"></i> Cari Data </button>
+     </div>
+     <div id="public-search-results" class="space-y-2 max-h-60 overflow-y-auto"></div>
+     <button type="button" onclick="showPage('page-landing')" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-600 rounded-xl transition"> Kembali </button>
+    </div>
+   </div>
+
+   <!-- Login Admin Page -->
+   <div id="page-login" class="hidden w-full h-full slide-up flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 space-y-4 w-full max-w-sm">
+     <div class="text-center">
+      <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="lock" class="w-6 h-6 text-blue-600"></i>
+      </div>
+      <h2 class="text-xl font-700 text-slate-800">Login Administrator</h2>
+      <p class="text-xs text-slate-500">Masukkan password untuk akses dashboard</p>
+     </div>
+     <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+       <div class="relative">
+         <input type="password" id="admin-password-input" placeholder="Masukkan Password" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-blue-200 outline-none transition" required>
+         <button type="button" onclick="togglePasswordVisibility('admin-password-input', 'password-eye-icon')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition">
+           <i id="password-eye-icon" data-lucide="eye" class="w-4 h-4"></i>
+         </button>
+       </div>
+      <div id="admin-login-error" class="hidden bg-red-50 border border-red-200 text-red-600 text-[10px] font-800 p-3 rounded-xl text-center animate-shake">Password Salah! Akses Ditolak.</div>
+      <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-700 rounded-xl transition shadow-md"> Masuk ke Dashboard </button>
+      <button type="button" onclick="showPage('page-landing')" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-600 rounded-xl transition text-xs"> Kembali </button>
+     </form>
+    </div>
+   </div>
+
+   <!-- Admin Page (Protected) -->
+   <div id="page-admin" class="hidden w-full h-full slide-up flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-4 sm:p-6 space-y-4 w-full max-w-5xl max-h-full flex flex-col">
+     <div class="flex justify-between items-center">
+       <h2 class="text-xl font-700 text-slate-800">Data Pendaftar Real-time</h2>
+       <span class="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-800 rounded-md uppercase">Admin Mode</span>
+     </div>
+     
+     <!-- Mini Stats -->
+     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+       <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl text-center">
+         <p class="text-[10px] font-800 text-emerald-600 uppercase tracking-wider">Mandiri Terpakai</p>
+         <p id="admin-stat-mandiri" class="text-3xl font-800 text-emerald-700">0</p>
+       </div>
+       <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl text-center">
+         <p class="text-[10px] font-800 text-purple-600 uppercase tracking-wider">Kolektif Terpakai</p>
+         <p id="admin-stat-kolektif" class="text-3xl font-800 text-purple-700">0</p>
+       </div>
+       <div class="col-span-2 flex items-center justify-end gap-2">
+         <div class="relative flex-1 max-w-xs">
+           <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+           <input type="text" id="admin-search-filter" onkeyup="filterAdminTable()" placeholder="Cari nama/NISN..." class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-200 transition">
+         </div>
+         <button onclick="downloadCSV()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-700 rounded-xl transition flex items-center gap-2 shadow-sm">
+           <i data-lucide="download" class="w-3.5 h-3.5"></i> CSV
+         </button>
+       </div>
+     </div>
+
+     <div class="h-px bg-slate-100"></div>
+     
+     <!-- Table Container -->
+     <div class="flex-1 overflow-auto border border-slate-100 rounded-xl bg-slate-50/30">
+       <table class="w-full text-left border-collapse min-w-[600px]">
+         <thead class="bg-slate-50 sticky top-0">
+           <tr>
+             <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">No. Antri</th>
+             <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">Nama Siswa</th>
+             <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">NISN</th>
+             <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">Status</th>
+             <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">Sekolah Asal</th>
+             <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">WA</th>
+           </tr>
+         </thead>
+         <tbody id="admin-table-body" class="text-slate-700">
+           <!-- Data pendaftar akan muncul di sini -->
+           <tr><td colspan="6" class="p-10 text-center text-slate-400 text-xs">Mengambil data dari server...</td></tr>
+         </tbody>
+       </table>
+     </div>
+
+     <div class="flex items-center justify-between pt-2">
+       <p class="text-[10px] text-slate-400 italic">Data diperbarui otomatis setiap 10 detik</p>
+       <div class="flex gap-2">
+         <button type="button" onclick="logoutAdmin()" class="px-6 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-700 rounded-xl transition flex items-center gap-2"> <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout </button>
+         <button type="button" onclick="showPage('page-landing')" class="px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-700 rounded-xl transition"> Tutup </button>
+       </div>
+     </div>
+    </div>
+   </div>
   </div>
 
   <script>
@@ -178,7 +285,7 @@
     const CONFIG = {
       main_title: 'Sistem Antrian SPMB',
       school_name: 'SMP Negeri 3 Pemalang',
-      webhook_url: 'https://script.google.com/macros/s/AKfycbxleXGbANIpB1IusH3vc-Pfewdr1bIdSTIehkvVbj_Q7iYZDUbrrE6nSwitUUqvla8urg/exec'
+      webhook_url: 'https://script.google.com/macros/s/AKfycbyEWiMeYDy649PKOWD0OU2Tk7cepILwr9-a6i1aIG4X_R9GFObsDirJyCgFwoZsbvsr/exec'
     };
 
     const DAILY_LIMIT_MANDIRI = 300;
@@ -188,7 +295,10 @@
     let nextDayStr = getNextDayStr();
     let currentStatus = '';
     let jumlahMurid = 1;
+    let adminMode = false; // Tambahkan variabel untuk mode admin
     let clockInterval;
+    let adminRefreshInterval;
+    let currentAdminData = []; // Untuk simpan data yang akan di download
 
     function getNextDayStr() {
       const tomorrow = new Date();
@@ -262,7 +372,46 @@
         
         const icons = document.querySelectorAll('[data-lucide="sun"], [data-lucide="moon"]');
         icons.forEach(icon => icon.setAttribute('data-lucide', isLight ? 'moon' : 'sun'));
+        
+        // Update admin button icon based on theme
+        const adminBtnIcon = document.getElementById('admin-btn-icon');
+        if (adminBtnIcon) adminBtnIcon.setAttribute('data-lucide', isLight ? 'settings' : 'settings');
+
         lucide.createIcons();
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const passInput = document.getElementById('admin-password-input');
+      const errorDiv = document.getElementById('admin-login-error');
+      
+      if (passInput.value === "@Vieqy126892") {
+        passInput.value = ''; // Reset field
+        errorDiv.classList.add('hidden');
+        showPage('page-admin');
+      } else {
+        errorDiv.classList.remove('hidden');
+        passInput.value = '';
+        setTimeout(() => errorDiv.classList.add('hidden'), 3000);
+      }
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        input.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
+      }
+      lucide.createIcons();
+    }
+
+    function logoutAdmin() {
+      // Mengunci akses dengan kembali ke landing page
+      showPage('page-landing');
     }
 
     function handleAmbilAntrian() {
@@ -410,8 +559,9 @@
              document.getElementById('success-details').innerHTML = `<p><span class="font-600">Status:</span> Kolektif</p><p><span class="font-600">Asal Sekolah:</span> ${payload.asal}</p><p><span class="font-600">Jumlah Peserta:</span> ${jumlahMurid}</p><p><span class="font-600">Waktu:</span> ${payload.waktu}</p>`;
           }
           
+          // Pastikan tampilan landing page terupdate sebelum pindah halaman
+          await updateQueueDisplayFromServer();
           document.getElementById('form-data').reset();
-          updateQueueDisplayFromServer(); 
           showPage('page-success');
         } else {
           showInlineError('Gagal mendapatkan respon valid dari server.');
@@ -444,10 +594,140 @@
       }
     }
 
+    async function searchRegistrationsByNisn(inputId, resultsId) {
+      const nisn = document.getElementById(inputId).value.trim();
+      const searchResultsDiv = document.getElementById(resultsId);
+      searchResultsDiv.innerHTML = '<p class="text-sm text-slate-500 text-center">Mencari data...</p>';
+
+      if (!nisn || !/^[0-9]{10}$/.test(nisn)) {
+        searchResultsDiv.innerHTML = '<p class="text-sm text-red-500 text-center">NISN harus 10 digit angka.</p>';
+        return;
+      }
+
+      try {
+        const response = await fetch(CONFIG.webhook_url + "?nisn=" + nisn);
+        const results = await response.json();
+
+        if (results.status === 'sukses' && results.data.length > 0) {
+          let html = `<p class="text-sm font-600 text-slate-700 mb-2">Ditemukan ${results.data.length} pendaftaran untuk NISN ${nisn}:</p>`;
+          results.data.forEach((item, index) => {
+            html += `
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-slate-700 space-y-1">
+                <p><span class="font-600">No. Antrian:</span> ${item['Nomor Antrian']}</p>
+                <p><span class="font-600">Tanggal:</span> ${item['Tanggal Antrian']}</p>
+                <p><span class="font-600">Waktu Daftar:</span> ${item['Waktu Daftar']}</p>
+                <p><span class="font-600">Status:</span> ${item['Status']}</p>
+                <p><span class="font-600">Nama Siswa:</span> ${item['Nama Siswa']}</p>
+                <p><span class="font-600">Asal Sekolah:</span> ${item['Asal Sekolah']}</p>
+                <p><span class="font-600">Nama Ortu:</span> ${item['Nama Ortu']}</p>
+                <p><span class="font-600">No. WA:</span> ${item['No WA']}</p>
+              </div>
+            `;
+          });
+          searchResultsDiv.innerHTML = html;
+        } else if (results.status === 'sukses' && results.data.length === 0) {
+          searchResultsDiv.innerHTML = '<p class="text-sm text-slate-500 text-center">Tidak ada pendaftaran ditemukan untuk NISN ini.</p>';
+        } else {
+          searchResultsDiv.innerHTML = `<p class="text-sm text-red-500 text-center">Error: ${results.message || 'Gagal mengambil data.'}</p>`;
+        }
+      } catch (error) {
+        searchResultsDiv.innerHTML = '<p class="text-sm text-red-500 text-center">Koneksi ke server gagal. Coba lagi nanti.</p>';
+        console.error("Search error:", error);
+      }
+    }
+
+    async function updateAdminDashboard() {
+      const targetDay = isQueueOpen() ? nextDayStr : todayStr;
+      try {
+        // Menambahkan parameter ?admin=true agar server mengirimkan data lengkap
+        const response = await fetch(CONFIG.webhook_url + "?admin=true&tanggal=" + targetDay);
+        const result = await response.json();
+        document.getElementById('admin-stat-mandiri').textContent = result.mandiri_used;
+        document.getElementById('admin-stat-kolektif').textContent = result.kolektif_used;
+        
+        currentAdminData = result.data || [];
+        const tbody = document.getElementById('admin-table-body');
+        
+        if (currentAdminData.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-slate-400 text-xs">Belum ada pendaftar hari ini.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = currentAdminData.map(item => `
+          <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+            <td class="p-3 text-xs font-800 text-blue-600">${item['Nomor Antrian']}</td>
+            <td class="p-3 text-xs font-600">${item['Nama Siswa']}</td>
+            <td class="p-3 text-xs text-slate-500">${item['NISN']}</td>
+            <td class="p-3 text-[10px]"><span class="px-2 py-0.5 rounded-full ${item['Status'] === 'MANDIRI' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'} font-800 uppercase">${item['Status']}</span></td>
+            <td class="p-3 text-xs text-slate-500 truncate max-w-[150px]">${item['Asal Sekolah']}</td>
+            <td class="p-3 text-xs text-blue-500 font-600">${item['No WA']}</td>
+          </tr>
+        `).join('');
+
+      } catch (e) {
+        console.error("Gagal update dashboard admin", e);
+      }
+    }
+
+    function downloadCSV() {
+      if (!currentAdminData || currentAdminData.length === 0) return alert("Tidak ada data untuk diunduh!");
+      
+      const headers = Object.keys(currentAdminData[0]).join(",");
+      const rows = currentAdminData.map(row => Object.values(row).map(v => `"${v}"`).join(",")).join("\n");
+      const csvContent = "data:text/csv;charset=utf-8," + headers + "\n" + rows;
+      
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Data_Antrian_SPMB_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function filterAdminTable() {
+      const input = document.getElementById('admin-search-filter');
+      const filter = input.value.toLowerCase();
+      const rows = document.querySelectorAll('#admin-table-body tr');
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+
     function showPage(pageId) {
-      ['page-landing', 'page-form', 'page-success'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+      ['page-landing', 'page-form', 'page-success', 'page-admin', 'page-search', 'page-login'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
       // Hentikan clock jika tidak di halaman form untuk hemat resource
       if (pageId !== 'page-form' && clockInterval) clearInterval(clockInterval);
+      
+      // Kelola Real-time Dashboard Admin
+      if (adminRefreshInterval) clearInterval(adminRefreshInterval);
+
+      // Clear search results when leaving search page
+      if (pageId !== 'page-search') {
+        const res = document.getElementById('public-search-results');
+        const inp = document.getElementById('public-nisn-search');
+        if (res) res.innerHTML = '';
+        if (inp) inp.value = '';
+      }
+
+      // Sembunyikan error login jika meninggalkan atau masuk kembali ke halaman login
+      document.getElementById('admin-login-error')?.classList.add('hidden');
+
+      // Update adminMode state
+      adminMode = (pageId === 'page-admin');
+      
+      if (adminMode) {
+        updateAdminDashboard();
+        // Refresh otomatis setiap 10 detik di halaman admin
+        adminRefreshInterval = setInterval(updateAdminDashboard, 10000);
+      }
+
       document.getElementById(pageId)?.classList.remove('hidden');
     }
 
