@@ -109,7 +109,7 @@
         </div>
         <div class="landing-stats-mandiri-item2 rounded-lg p-2 text-center">
          <p class="text-xs font-600 landing-stats-mandiri-text mb-1">Sisa</p>
-         <p id="mandiri-remaining" class="text-lg font-800 landing-stats-number">300</p>
+         <p id="mandiri-remaining" class="text-lg font-800 landing-stats-number">-</p>
         </div>
        </div>
       </div>
@@ -122,7 +122,7 @@
         </div>
         <div class="landing-stats-kolektif-item2 rounded-lg p-2 text-center">
          <p class="text-xs font-600 landing-stats-kolektif-text mb-1">Sisa</p>
-         <p id="kolektif-remaining" class="text-lg font-800 landing-stats-number">10</p>
+         <p id="kolektif-remaining" class="text-lg font-800 landing-stats-number">-</p>
         </div>
        </div>
       </div>
@@ -236,7 +236,7 @@
    <div id="page-admin" class="hidden w-full h-full slide-up flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-4 sm:p-6 space-y-4 w-full max-w-5xl max-h-full flex flex-col">
      <div class="flex justify-between items-center">
-       <h2 class="text-xl font-700 text-slate-800">Data Pendaftar Real-time</h2>
+       <h2 class="text-xl font-700 text-slate-800">Data Pendaftar (<span id="admin-view-date" class="text-blue-600">-</span>)</h2>
        <span class="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-800 rounded-md uppercase">Admin Mode</span>
      </div>
      
@@ -265,7 +265,7 @@
      
      <!-- Table Container -->
      <div class="flex-1 overflow-auto border border-slate-100 rounded-xl bg-slate-50/30">
-       <table class="w-full text-left border-collapse min-w-[600px]">
+       <table class="w-full text-left border-collapse min-w-[700px]">
          <thead class="bg-slate-50 sticky top-0">
            <tr>
              <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">No. Antri</th>
@@ -274,6 +274,7 @@
              <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">Status</th>
              <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">Sekolah Asal</th>
              <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100">WA</th>
+             <th class="p-3 text-[10px] font-800 text-slate-500 uppercase tracking-wider border-b border-slate-100 text-center">Aksi</th>
            </tr>
          </thead>
          <tbody id="admin-table-body" class="text-slate-700">
@@ -284,12 +285,35 @@
      </div>
 
      <div class="flex items-center justify-between pt-2">
-       <p class="text-[10px] text-slate-400 italic">Terakhir diperbarui: <span id="admin-last-update">-</span> (10 dtk)</p>
+       <p class="text-[10px] text-slate-400 italic">Update: <span id="admin-last-update">-</span></p>
        <div class="flex gap-2">
          <button type="button" onclick="logoutAdmin()" class="px-6 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-700 rounded-xl transition flex items-center gap-2"> <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout </button>
          <button type="button" onclick="showPage('page-landing')" class="px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-700 rounded-xl transition"> Tutup </button>
        </div>
      </div>
+    </div>
+   </div>
+
+   <!-- Edit Data Modal -->
+   <div id="edit-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4 slide-up">
+     <div class="flex justify-between items-center">
+      <h3 class="text-lg font-700 text-slate-800">Edit Data Pendaftar</h3>
+      <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600"> <i data-lucide="x" class="w-5 h-5"></i> </button>
+     </div>
+     <form onsubmit="saveEdit(event)" class="space-y-3">
+      <input type="hidden" id="edit-id">
+      <input type="hidden" id="edit-original-nisn">
+      <div><label class="block text-[10px] font-800 text-slate-500 uppercase mb-1">NISN</label><input type="text" id="edit-nisn" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-200" required></div>
+      <div><label class="block text-[10px] font-800 text-slate-500 uppercase mb-1">Nama Siswa</label><input type="text" id="edit-nama" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-200" required></div>
+      <div><label class="block text-[10px] font-800 text-slate-500 uppercase mb-1">Asal Sekolah</label><input type="text" id="edit-asal" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-200" required></div>
+      <div><label class="block text-[10px] font-800 text-slate-500 uppercase mb-1">Nama Orang Tua</label><input type="text" id="edit-ortu" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-200" required></div>
+      <div><label class="block text-[10px] font-800 text-slate-500 uppercase mb-1">Nomor WA</label><input type="text" id="edit-wa" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-200" required></div>
+      <div class="flex gap-2 pt-2">
+       <button type="submit" id="btn-save-edit" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-700 rounded-xl transition shadow-md">Simpan Perubahan</button>
+       <button type="button" onclick="closeEditModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-700 rounded-xl transition">Batal</button>
+      </div>
+     </form>
     </div>
    </div>
   </div>
@@ -299,10 +323,10 @@
     const CONFIG = {
       main_title: 'Sistem Antrian SPMB',
       school_name: 'SMP Negeri 3 Pemalang',
-  webhook_url: 'https://script.google.com/macros/s/AKfycbztQBQS4qnEQcOt61Lm-SQdsLAXGXd14X_dzo69IMNvJgN7h16dQjrCIbfc4Lhg_pXBCw/exec' // Ganti dengan URL Web App yang baru Anda dapatkan
+  webhook_url: 'https://script.google.com/macros/s/AKfycby0KiwSHnX6qC-cWPGB1VMnK09zwQoUR3ozmVSNcmMNR9484oO36TNBMhzXRWhDkRFY/exec' // Ganti dengan URL Web App yang baru Anda dapatkan
     };
 
-    const DAILY_LIMIT_MANDIRI = 50; // Ubah angka ini untuk kuota Mandiri
+    const DAILY_LIMIT_MANDIRI = 300; // Ubah angka ini untuk kuota Mandiri
     const DAILY_LIMIT_KOLEKTIF = 10; // Ubah angka ini untuk kuota Kolektif
     
     // Fungsi pembantu untuk mendapatkan tanggal lokal (Asia/Jakarta) format YYYY-MM-DD
@@ -341,21 +365,19 @@
     }
 
     function isQueueOpen() {
-      // MODE TESTING: DIBUKA FULL SEKARANG
-      return true; 
-      
-      // SETTING NORMAL (19.00):
-      // const time = getJakartaTime();
-      // return time.totalMinutes >= 1140 || time.totalMinutes < 702; // Buka 19:00 sampai sesi siang besok selesai
+      const time = getJakartaTime();
+      // Sesi Pagi (Sisa Kuota Hari Ini): 07:00 - 10:00 (420 - 600 menit)
+      const morningSession = time.totalMinutes >= 420 && time.totalMinutes < 600;
+      // Sesi Malam (Kuota Besok): 19:00 - 22:00 (1140 - 1320 menit)
+      const eveningSession = time.totalMinutes >= 1140 && time.totalMinutes < 1320;
+      return morningSession || eveningSession;
     }
 
     function getTargetDay() {
-      // MODE TESTING: TARGET SELALU UNTUK BESOK
-      return getJakartaDateStr(1);
-
-      // SETTING NORMAL (19.00):
-      // const time = getJakartaTime();
-      // return (time.totalMinutes >= 1140) ? getJakartaDateStr(1) : getJakartaDateStr(0);
+      const time = getJakartaTime();
+      // Pukul 18:00 (1080 menit) ke atas: Sistem beralih memantau/menargetkan jadwal BESOK (Reset View)
+      // Di bawah jam 18:00: Sistem memantau jadwal HARI INI
+      return (time.totalMinutes >= 1080) ? getJakartaDateStr(1) : getJakartaDateStr(0);
     }
 
     // MENGAMBIL SISA KUOTA ASLI DARI SERVER GOOGLE SHEETS
@@ -390,7 +412,7 @@
         } else if (!isQueueOpen()) {
           btnAmbil.disabled = true;
           btnAmbil.classList.add('opacity-50', 'cursor-not-allowed');
-          document.getElementById('queue-closed-msg').innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 inline mr-2"></i>Pendaftaran sesi berikutnya dibuka pukul 19.00 WIB.`;
+          document.getElementById('queue-closed-msg').innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 inline mr-2"></i>Pendaftaran hari berikutnya dibuka pukul 19.00 WIB.`;
           document.getElementById('queue-closed-msg').classList.remove('hidden');
         } else {
           btnAmbil.disabled = false;
@@ -461,7 +483,11 @@
 
     function handleAmbilAntrian() {
       if (!isQueueOpen()) {
-        showInlineWarning('Antrian sedang tutup (Rekapitulasi). Buka kembali pukul 19.00 WIB untuk antrian besok.');
+        const time = getJakartaTime();
+        let msg = "Antrian sedang tutup.";
+        if (time.totalMinutes < 420) msg = "Sesi pagi (hari ini) dibuka pukul 07.00 WIB.";
+        else if (time.totalMinutes < 1140) msg = "Sesi malam (besok) dibuka pukul 19.00 WIB.";
+        showInlineWarning(msg);
         return;
       }
 
@@ -671,7 +697,6 @@
         let el = form.querySelector('.inline-error');
         if (!el) { el = document.createElement('div'); el.className = 'inline-error bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl p-3 mt-3'; form.appendChild(el); }
         el.textContent = msg; el.classList.remove('hidden');
-        setTimeout(() => el.classList.add('hidden'), 4000);
         setTimeout(() => el.classList.add('hidden'), 8000);
       }
     }
@@ -682,7 +707,6 @@
         let el = landing.querySelector('.inline-warning');
         if (!el) { el = document.createElement('div'); el.className = 'inline-warning bg-yellow-50 border border-yellow-200 text-yellow-700 text-sm rounded-xl p-3 mt-4'; landing.appendChild(el); }
         el.textContent = msg; el.classList.remove('hidden');
-        setTimeout(() => el.classList.add('hidden'), 5000);
         setTimeout(() => el.classList.add('hidden'), 8000);
       }
     }
@@ -729,6 +753,28 @@
       }
     }
 
+    async function deleteQueueEntry(uniqueId, status, queueNumber) {
+        if (!confirm(`Anda yakin ingin menghapus antrian ${queueNumber} (${status})? Aksi ini tidak dapat dibatalkan.`)) {
+            return;
+        }
+
+        const deleteButton = event.target.closest('button');
+        const originalContent = deleteButton.innerHTML;
+        deleteButton.disabled = true;
+        deleteButton.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>';
+        lucide.createIcons();
+
+        try {
+            const payload = { type: 'delete', uniqueId: uniqueId };
+            const response = await fetch(CONFIG.webhook_url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+            const result = await response.json();
+
+            if (result.status === 'sukses') { alert(`Antrian ${queueNumber} berhasil dihapus. Kuota akan diperbarui.`); updateAdminDashboard(); updateQueueDisplayFromServer(); } 
+            else { alert(`Gagal menghapus antrian ${queueNumber}: ${result.message}`); }
+        } catch (error) { console.error("Error deleting entry:", error); alert("Terjadi kesalahan koneksi saat menghapus antrian."); } 
+        finally { deleteButton.disabled = false; deleteButton.innerHTML = originalContent; lucide.createIcons(); }
+    }
+
     async function updateAdminDashboard() {
       const targetDay = getTargetDay();
       try {
@@ -738,13 +784,14 @@
         const result = await response.json();
         document.getElementById('admin-stat-mandiri').textContent = result.mandiri_used;
         document.getElementById('admin-stat-kolektif').textContent = result.kolektif_used;
+        document.getElementById('admin-view-date').textContent = targetDay;
         document.getElementById('admin-last-update').textContent = new Date().toLocaleTimeString('id-ID');
         
         currentAdminData = result.data || [];
         const tbody = document.getElementById('admin-table-body');
         
         if (currentAdminData.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-slate-400 text-xs">Belum ada pendaftar hari ini.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="7" class="p-10 text-center text-slate-400 text-xs">Belum ada pendaftar hari ini.</td></tr>';
           return;
         }
 
@@ -756,9 +803,21 @@
             <td class="p-3 text-[10px]"><span class="px-2 py-0.5 rounded-full ${item['Status'] === 'MANDIRI' ? 'bg-emerald-100 text-emerald-700' : 'bg-purple-100 text-purple-700'} font-800 uppercase">${item['Status']}</span></td>
             <td class="p-3 text-xs text-slate-500 truncate max-w-[150px]">${item['Asal Sekolah']}</td>
             <td class="p-3 text-xs text-blue-500 font-600">${item['No WA']}</td>
+            <td class="p-3 text-center flex justify-center gap-1">
+                <button onclick="openEditModal('${item['ID Unik']}', '${String(item['NISN']).replace(/'/g, "")}')" 
+                        class="p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors"
+                        title="Edit Data">
+                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="deleteQueueEntry('${item['ID Unik']}', '${item['Status']}', '${item['Nomor Antrian']}')" 
+                        class="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors"
+                        title="Hapus Antrian ${item['Nomor Antrian']}">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            </td>
           </tr>
         `).join('');
-
+        lucide.createIcons();
       } catch (e) {
         console.error("Gagal update dashboard admin", e);
       }
@@ -793,6 +852,56 @@
           row.style.display = "none";
         }
       });
+    }
+
+    function openEditModal(id, nisn) {
+      // Cari data di currentAdminData yang cocok dengan ID Unik dan NISN
+      const item = currentAdminData.find(d => d['ID Unik'] == id && String(d['NISN']).replace(/'/g, "") == nisn);
+      if (!item) return;
+      
+      document.getElementById('edit-id').value = id;
+      document.getElementById('edit-original-nisn').value = nisn;
+      document.getElementById('edit-nisn').value = nisn;
+      document.getElementById('edit-nama').value = item['Nama Siswa'];
+      document.getElementById('edit-asal').value = item['Asal Sekolah'];
+      document.getElementById('edit-ortu').value = item['Nama Ortu'];
+      document.getElementById('edit-wa').value = String(item['No WA']).replace(/'/g, "");
+      
+      document.getElementById('edit-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.add('hidden');
+    }
+
+    async function saveEdit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-edit');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Menyimpan...';
+
+      const payload = {
+        type: 'edit',
+        uniqueId: document.getElementById('edit-id').value,
+        originalNisn: document.getElementById('edit-original-nisn').value,
+        updatedData: {
+          nisn: document.getElementById('edit-nisn').value.trim(),
+          nama: document.getElementById('edit-nama').value.trim(),
+          asal: document.getElementById('edit-asal').value.trim(),
+          ortu: document.getElementById('edit-ortu').value.trim(),
+          wa: document.getElementById('edit-wa').value.trim()
+        }
+      };
+
+      try {
+        const response = await fetch(CONFIG.webhook_url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+        const result = await response.json();
+        if (result.status === 'sukses') { alert('Data berhasil diperbarui!'); closeEditModal(); updateAdminDashboard(); } 
+        else { alert('Gagal: ' + result.message); }
+      } catch (err) { alert('Terjadi kesalahan koneksi.'); } 
+      finally { btn.disabled = false; btn.textContent = originalText; }
     }
 
     function showPage(pageId) {
